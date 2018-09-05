@@ -23,8 +23,8 @@ public class BoardTest {
         boardService = new BoardService();
 
         boardList = Arrays.asList(new Board(1, "타이틀1", "작성자1", "패스워드1", "사진1", "비밀번호1"),
-                                  new Board(2, "타이틀2", "작성자2", "패스워드2", "사진2", "비밀번호2"),
-                                  new Board(3, "타이틀3", "작성자3", "패스워드3", "사진3", "비밀번호3"));
+                new Board(2, "타이틀2", "작성자2", "패스워드2", "사진2", "비밀번호2"),
+                new Board(3, "타이틀3", "작성자3", "패스워드3", "사진3", "비밀번호3"));
 
         for ( int i = 0; i < boardList.size(); i++ ) {
             boardService.createNew(boardList.get(i));
@@ -34,7 +34,6 @@ public class BoardTest {
     @Test
     public void 모든_게시물을_가져온다() {
         List<Board> allBoards = boardService.getAllBoard();
-
         assertEquals(boardService.getBoardCount(), boardList.size());
 
         for ( int i = 0; i < boardService.getBoardCount(); i++ ) {
@@ -56,6 +55,13 @@ public class BoardTest {
         Board getBoard2 = boardService.getBoardById(newBoard2.getId());
 
         checkAllValueEqualable(newBoard2, getBoard2);
+    }
+
+    @Test(expected = MaxArticleOverflowException.class)
+    public void 게시물은_최대_5개까지만_등록할_수_있다() {
+        boardService.createNew(new Board(4, "타이틀4", "작성자4", "패스워드4", "사진4", "비밀번호4"));
+        boardService.createNew(new Board(5, "타이틀5", "작성자5", "패스워드5", "사진5", "비밀번호5"));
+        boardService.createNew(new Board(6, "타이틀6", "작성자6", "패스워드6", "사진6", "비밀번호6"));
     }
 
     @Test
@@ -114,13 +120,6 @@ public class BoardTest {
         assertEquals(deletedBoard.getId(), deletedId);
     }
 
-    @Test(expected = MaxArticleOverflowException.class)
-    public void 번개신청_게시물은_5개까지만_등록할_수_있다() {
-        boardService.createNew(new Board(4, "타이틀4", "작성자4", "패스워드4", "사진4", "비밀번호4"));
-        boardService.createNew(new Board(5, "타이틀5", "작성자5", "패스워드5", "사진5", "비밀번호5"));
-        boardService.createNew(new Board(6, "타이틀6", "작성자6", "패스워드6", "사진6", "비밀번호6"));
-    }
-
     private void checkAllValueEqualable(Board board1, Board board2) {
         assertEquals(board1.getTitle(), board2.getTitle());
         assertEquals(board1.getWriter(), board2.getWriter());
@@ -129,3 +128,4 @@ public class BoardTest {
         assertEquals(board1.getContent(), board2.getContent());
     }
 }
+

@@ -1,4 +1,4 @@
-package com.midasit.cyj0619.controller;
+package com.midasit.bungae.board.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,28 +11,33 @@ public class BoardController {
         return "main";
     }
 
-    @RequestMapping("/detailForm")
+    @RequestMapping(value = "/detailForm")
     public String showDetailForm() {
         return "detailForm";
     }
 
-    @RequestMapping("/writeForm")
+    @RequestMapping(value = "/writeForm")
     public String showWriteForm() {
         return "writeForm";
     }
 
-    @RequestMapping("/write")
+    @RequestMapping(value = "/write")
     public String writeBoard() {
         return "redirect:/board/main";
     }
 
-    @RequestMapping("/modifyForm")
+    @RequestMapping(value = "/modifyForm")
     public String showModifyForm() {
         return "modifyForm";
     }
 
-    @RequestMapping("/modify")
+    @RequestMapping(value = "/modify")
     public String modifyBoard() {
+        return "redirect:/board/main";
+    }
+
+    @RequestMapping(value = "/delete")
+    public String delete() {
         return "redirect:/board/main";
     }
 }

@@ -1,4 +1,4 @@
-package com.midasit.bungae.board;
+package com.midasit.bungae.board.exception;
 
 public class NoRightOfModifyAndDeleteException extends RuntimeException {
     public NoRightOfModifyAndDeleteException() {

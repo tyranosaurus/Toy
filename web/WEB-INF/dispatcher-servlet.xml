@@ -13,7 +13,7 @@
     <!-- MVC 기본 어노테이션 활성화 -->
     <mvc:annotation-driven />
 
-        <!-- 정적 자원을 위한 디폴트 서블릿 위임 핸들러 -->
+    <!-- 정적 자원을 위한 디폴트 서블릿 위임 핸들러 -->
     <mvc:default-servlet-handler />
 
     <!-- Bean 스캔 패키지 설정 -->

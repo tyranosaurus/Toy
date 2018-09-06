@@ -30,6 +30,7 @@ public class BoardDao {
 
     public void update(int boardId, String title, String image, String content) {
         Board modifiedBoard = boardList.get(getIndex(boardId));
+
         modifiedBoard.setTitle(title);
         modifiedBoard.setImage(image);
         modifiedBoard.setContent(content);
@@ -44,6 +45,7 @@ public class BoardDao {
 
     public void addUserInBoard(int boardId, User joinUser) {
         Board board = getById(boardId);
+
         board.addUser(joinUser);
     }
 

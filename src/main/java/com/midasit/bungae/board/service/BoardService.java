@@ -6,6 +6,7 @@ import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.board.exception.AlreadyJoinUserException;
 import com.midasit.bungae.board.exception.MaxBoardOverflowException;
 import com.midasit.bungae.board.exception.MaxUserOverflowInBoardException;
+import com.midasit.bungae.board.exception.NoJoinUserException;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class BoardService {
         return boardDao.getCount();
     }
 
-    public boolean checkWriterId(int boardId, User loginUser) {
+    public boolean isEqualWriterId(int boardId, User loginUser) {
         Board board = boardDao.getById(boardId);
 
         if ( board.getWriter().getId().equals(loginUser.getId()) ) {
@@ -49,7 +50,7 @@ public class BoardService {
         return false;
     }
 
-    public boolean checkPassword(int boardId, String rightPassword) {
+    public boolean isEqualPassword(int boardId, String rightPassword) {
         Board board = boardDao.getById(boardId);
 
         if ( board.getPassword().equals(rightPassword) ) {
@@ -67,20 +68,15 @@ public class BoardService {
         return boardDao.delete(boardId);
     }
 
-    public void joinBoard(int boardId, User joinUser) {
+    public void joinUserAtBoard(int boardId, User joinUser) {
         Board board = boardDao.getById(boardId);
-        int currentUserCount = board.getUserList().size();
 
-        // 참가 중복 체크
-        for ( int i = 0; i < board.getUserList().size(); i++ ) {
-            if ( board.getUserList().get(i).getId().equals(joinUser.getId()) ) {
+        if ( board.getUserList().size() < board.getMaxUserCount() ) {
+            if ( hasSameUser(board, joinUser) ) {
+                boardDao.addUserInBoard(boardId, joinUser);
+            } else {
                 throw new AlreadyJoinUserException("이미 현재 번개모임에 참여하였습니다.");
             }
-        }
-
-        // 최대 참가자 수 체크
-        if ( currentUserCount < board.getMaxUserCount() ) {
-            boardDao.addUserInBoard(boardId, joinUser);
         } else {
             throw new MaxUserOverflowInBoardException("최대 참가자 수를 초과하였습니다.");
         }
@@ -88,5 +84,28 @@ public class BoardService {
 
     public List<User> getAllUserInBoard(int boardId) {
         return boardDao.getAllUser(boardId);
+    }
+
+    public String cancelJoinFromBoard(int boardId, String cancelUserId) {
+        Board board = boardDao.getById(boardId);
+        List<User> userList = board.getUserList();
+
+        for ( int i = 0; i < userList.size(); i++ ) {
+            if ( userList.get(i).getId().equals(cancelUserId) ) {
+                return userList.remove(i).getId();
+            }
+        }
+
+        throw new NoJoinUserException();
+    }
+
+    private boolean hasSameUser(Board board, User joinUser) {
+        for ( int i = 0; i < board.getUserList().size(); i++ ) {
+            if ( board.getUserList().get(i).getId().equals(joinUser.getId()) ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

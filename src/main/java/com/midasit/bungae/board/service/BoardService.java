@@ -1,6 +1,6 @@
 package com.midasit.bungae.board.service;
 
-import com.midasit.bungae.board.dao.BoardDao;
+import com.midasit.bungae.board.dao.BoardMemoryRepository;
 import com.midasit.bungae.board.dao.User;
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.board.exception.AlreadyJoinUserException;
@@ -10,38 +10,38 @@ import com.midasit.bungae.board.exception.NoJoinUserException;
 
 import java.util.List;
 
-public class BoardService {
+ class BoardService {
 
     private static final int MAX_BOARD_COUNT = 5;
 
-    BoardDao boardDao = null;
+    BoardMemoryRepository boardMemoryRepository = null;
 
-    public BoardService() {
-        boardDao = new BoardDao();
+    BoardService() {
+        boardMemoryRepository = new BoardMemoryRepository();
     }
 
-    public List<Board> getAllBoard() {
-        return boardDao.getAll();
+    List<Board> getAllBoard() {
+        return boardMemoryRepository.getAll();
     }
 
-    public Board getBoardById(int id) {
-        return boardDao.getById(id);
+    Board getBoardById(int id) {
+        return boardMemoryRepository.getById(id);
     }
 
-    public void createNew(Board board) {
+    void createNew(Board board) {
         if ( getBoardCount() < MAX_BOARD_COUNT ) {
-            boardDao.add(board);
+            boardMemoryRepository.add(board);
         } else {
             throw new MaxBoardOverflowException("최대 게시글 수를 초과하였습니다.");
         }
     }
 
-    public int getBoardCount() {
-        return boardDao.getCount();
+    int getBoardCount() {
+        return boardMemoryRepository.getCount();
     }
 
-    public boolean isEqualWriterId(int boardId, User loginUser) {
-        Board board = boardDao.getById(boardId);
+    boolean isEqualWriterId(int boardId, User loginUser) {
+        Board board = boardMemoryRepository.getById(boardId);
 
         if ( board.getWriter().getId().equals(loginUser.getId()) ) {
             return true;
@@ -50,8 +50,8 @@ public class BoardService {
         return false;
     }
 
-    public boolean isEqualPassword(int boardId, String rightPassword) {
-        Board board = boardDao.getById(boardId);
+    boolean isEqualPassword(int boardId, String rightPassword) {
+        Board board = boardMemoryRepository.getById(boardId);
 
         if ( board.getPassword().equals(rightPassword) ) {
             return true;
@@ -60,20 +60,20 @@ public class BoardService {
         return false;
     }
 
-    public void modifyBoard(int boardId, String title, String image, String content) {
-        boardDao.update(boardId, title, image, content);
+     void modifyBoard(int boardId, String title, String image, String content) {
+        boardMemoryRepository.update(boardId, title, image, content);
     }
 
-    public int deleteBoard(int boardId) {
-        return boardDao.delete(boardId);
+     int deleteBoard(int boardId) {
+        return boardMemoryRepository.delete(boardId);
     }
 
-    public void joinUserAtBoard(int boardId, User joinUser) {
-        Board board = boardDao.getById(boardId);
+    void joinUserAtBoard(int boardId, User joinUser) {
+        Board board = boardMemoryRepository.getById(boardId);
 
         if ( board.getUserList().size() < board.getMaxUserCount() ) {
             if ( hasSameUser(board, joinUser) ) {
-                boardDao.addUserInBoard(boardId, joinUser);
+                boardMemoryRepository.addUserInBoard(boardId, joinUser);
             } else {
                 throw new AlreadyJoinUserException("이미 현재 번개모임에 참여하였습니다.");
             }
@@ -82,12 +82,12 @@ public class BoardService {
         }
     }
 
-    public List<User> getAllUserInBoard(int boardId) {
-        return boardDao.getAllUser(boardId);
+     List<User> getAllUserInBoard(int boardId) {
+        return boardMemoryRepository.getAllUser(boardId);
     }
 
-    public String cancelJoinFromBoard(int boardId, String cancelUserId) {
-        Board board = boardDao.getById(boardId);
+     String cancelJoinFromBoard(int boardId, String cancelUserId) {
+        Board board = boardMemoryRepository.getById(boardId);
         List<User> userList = board.getUserList();
 
         for ( int i = 0; i < userList.size(); i++ ) {

@@ -5,10 +5,10 @@ import com.midasit.bungae.board.dto.Board;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardDao {
+public class BoardMemoryRepository {
     List<Board> boardList = null;
 
-    public BoardDao() {
+    public BoardMemoryRepository() {
         boardList = new ArrayList<Board>();
     }
 

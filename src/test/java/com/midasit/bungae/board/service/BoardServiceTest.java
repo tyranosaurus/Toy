@@ -1,5 +1,6 @@
-package com.midasit.bungae.board;
+package com.midasit.bungae.board.service;
 
+import com.midasit.bungae.board.Gender;
 import com.midasit.bungae.board.dao.User;
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.board.exception.*;
@@ -7,6 +8,7 @@ import com.midasit.bungae.board.service.BoardService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
 import java.util.*;
 
@@ -14,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class BoardTest {
+public class BoardServiceTest {
     BoardService boardService = null;
 
     User user1 = null;

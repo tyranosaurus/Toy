@@ -1,4 +1,4 @@
-package com.midasit.bungae.board.dao;
+package com.midasit.bungae.board.dto;
 
 import com.midasit.bungae.board.Gender;
 

@@ -1,6 +1,7 @@
-package com.midasit.bungae.board.dao;
+package com.midasit.bungae.board.repository;
 
 import com.midasit.bungae.board.dto.Board;
+import com.midasit.bungae.board.dto.User;
 
 import java.util.ArrayList;
 import java.util.List;

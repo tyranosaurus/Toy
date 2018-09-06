@@ -1,7 +1,7 @@
 package com.midasit.bungae.board.service;
 
-import com.midasit.bungae.board.dao.BoardMemoryRepository;
-import com.midasit.bungae.board.dao.User;
+import com.midasit.bungae.board.repository.BoardMemoryRepository;
+import com.midasit.bungae.board.dto.User;
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.board.exception.AlreadyJoinUserException;
 import com.midasit.bungae.board.exception.MaxBoardOverflowException;

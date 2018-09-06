@@ -1,14 +1,11 @@
 package com.midasit.bungae.board.service;
 
 import com.midasit.bungae.board.Gender;
-import com.midasit.bungae.board.dao.User;
+import com.midasit.bungae.board.dto.User;
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.board.exception.*;
-import com.midasit.bungae.board.service.BoardService;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 
 import java.util.*;
 

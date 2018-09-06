@@ -1,7 +1,5 @@
 package com.midasit.bungae.board.dto;
 
-import com.midasit.bungae.board.dao.User;
-
 import java.util.ArrayList;
 import java.util.List;
 

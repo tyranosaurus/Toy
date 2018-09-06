@@ -6,7 +6,7 @@ import com.midasit.bungae.board.dto.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardMemoryRepository {
+public class BoardMemoryRepository implements Repository {
     List<Board> boardList = null;
 
     public BoardMemoryRepository() {

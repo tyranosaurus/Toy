@@ -1,22 +1,32 @@
 package com.midasit.bungae.board.dto;
 
+import com.midasit.bungae.board.dao.User;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board {
     private int id;
     private String title;
-    private String writer;
+    private User writer;
     private String password;
     private String image;
     private String content;
+    private int maxUserCount;
+    private List<User> userList = new ArrayList<User>();
 
     public Board() { }
 
-    public Board(int id, String title, String writer, String password, String image, String content) {
+    public Board(int id, String title, User writer, String password, String image, String content, int maxUserCount) {
         this.id = id;
         this.title = title;
         this.writer = writer;
         this.password = password;
         this.image = image;
         this.content = content;
+        this.maxUserCount = maxUserCount;
+
+        this.userList.add(writer);
     }
 
     public int getId() {
@@ -35,11 +45,11 @@ public class Board {
         this.title = title;
     }
 
-    public String getWriter() {
+    public User getWriter() {
         return writer;
     }
 
-    public void setWriter(String writer) {
+    public void setWriter(User writer) {
         this.writer = writer;
     }
 
@@ -65,5 +75,25 @@ public class Board {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getMaxUserCount() {
+        return maxUserCount;
+    }
+
+    public void setMaxUserCount(int maxUserCount) {
+        this.maxUserCount = maxUserCount;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    public void addUser(User joinUser) {
+        userList.add(joinUser);
     }
 }

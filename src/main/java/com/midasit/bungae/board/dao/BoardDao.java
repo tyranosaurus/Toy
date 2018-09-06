@@ -17,9 +17,7 @@ public class BoardDao {
     }
 
     public Board getById(int id) {
-        int i = getIndex(id);
-
-        return boardList.get(i);
+        return boardList.get(getIndex(id));
     }
 
     public void add(Board board) {
@@ -30,20 +28,29 @@ public class BoardDao {
         return boardList.size();
     }
 
-    public void update(Board modifiedBoard) {
-        int modifiedIndex = getIndex(modifiedBoard.getId());
-
-        boardList.get(modifiedIndex).setTitle(modifiedBoard.getTitle());
-        boardList.get(modifiedIndex).setWriter(modifiedBoard.getWriter());
-        boardList.get(modifiedIndex).setImage(modifiedBoard.getImage());
-        boardList.get(modifiedIndex).setContent(modifiedBoard.getContent());
+    public void update(int boardId, String title, String image, String content) {
+        Board modifiedBoard = boardList.get(getIndex(boardId));
+        modifiedBoard.setTitle(title);
+        modifiedBoard.setImage(image);
+        modifiedBoard.setContent(content);
     }
 
-    public int delete(Board deletedBoard) {
-        int deletedIndex = getIndex(deletedBoard.getId());
+    public int delete(int boardId) {
+        int deletedIndex = getIndex(boardId);
         int deletedId = boardList.remove(deletedIndex).getId();
 
         return deletedId;
+    }
+
+    public void addUserInBoard(int boardId, User joinUser) {
+        Board board = getById(boardId);
+        board.addUser(joinUser);
+    }
+
+    public List<User> getAllUser(int boardId) {
+        Board board = boardList.get(getIndex(boardId));
+
+        return board.getUserList();
     }
 
     private int getIndex(int id) {

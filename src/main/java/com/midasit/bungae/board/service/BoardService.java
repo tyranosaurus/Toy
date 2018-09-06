@@ -96,7 +96,7 @@ public class BoardService {
             }
         }
 
-        throw new NoJoinUserException();
+        throw new NoJoinUserException("번개모임에 참여하지 않았습니다.");
     }
 
     private boolean hasSameUser(Board board, User joinUser) {

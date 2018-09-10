@@ -6,7 +6,7 @@ import com.midasit.bungae.board.dto.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardMemoryRepository implements Repository {
+public class BoardMemoryRepository  {
     List<Board> boardList = null;
 
     public BoardMemoryRepository() {
@@ -17,48 +17,70 @@ public class BoardMemoryRepository implements Repository {
         return boardList;
     }
 
-    public Board getById(int id) {
+    public Board getByNo(int id) {
         return boardList.get(getIndex(id));
     }
 
-    public void add(Board board) {
+    public int add(Board board) {
         boardList.add(board);
+
+        return board.getNo();
     }
 
     public int getCount() {
         return boardList.size();
     }
 
-    public void update(int boardId, String title, String image, String content) {
-        Board modifiedBoard = boardList.get(getIndex(boardId));
+    public void update(int boardNo, String title, String image, String content) {
+        Board modifiedBoard = boardList.get(getIndex(boardNo));
 
         modifiedBoard.setTitle(title);
         modifiedBoard.setImage(image);
         modifiedBoard.setContent(content);
     }
 
-    public int delete(int boardId) {
-        int deletedIndex = getIndex(boardId);
-        int deletedId = boardList.remove(deletedIndex).getId();
+    public void delete(int boardNo) {
+        int deletedIndex = getIndex(boardNo);
+        int deletedId = boardList.remove(deletedIndex).getNo();
 
-        return deletedId;
+        //return deletedId;
     }
 
-    public void addUserInBoard(int boardId, User joinUser) {
-        Board board = getById(boardId);
+    public void deleteAll() {
+
+    }
+
+    public void addUserIntoBoard(int boardNo, int joinUser) {
+        Board board = getByNo(boardNo);
 
         board.addUser(joinUser);
     }
 
-    public List<User> getAllUser(int boardId) {
-        Board board = boardList.get(getIndex(boardId));
+    public List<Integer> getAllUser(int boardNo) {
+        Board board = boardList.get(getIndex(boardNo));
 
-        return board.getUserList();
+        return board.getUserNoList();
+    }
+
+    public void addUserNoIntoBoard(int boardNo, int joinUserNo) {
+
+    }
+
+    public int getUserCount(int boardNo) {
+        return 0;
+    }
+
+    public int deleteUserAtBoard(int boardNo, int userNo) {
+        return 0;
+    }
+
+    public int hasUserNoAtBoard(int boardNo, int userNo) {
+        return 0;
     }
 
     private int getIndex(int id) {
         for ( int i = 0; i < boardList.size(); i++ ) {
-            if ( boardList.get(i).getId() == id ) {
+            if ( boardList.get(i).getNo() == id ) {
                 return i;
             }
         }

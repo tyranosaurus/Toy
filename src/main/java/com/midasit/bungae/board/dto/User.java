@@ -3,26 +3,38 @@ package com.midasit.bungae.board.dto;
 import com.midasit.bungae.board.Gender;
 
 public class User {
-    private String Id;
+    private int no;
+    private String id;
     private String password;
     private String name;
     private String email;
     private Gender gender;
 
-    public User(String id, String password, String name, String email, Gender gender) {
-        this.Id = id;
+    public User() { }
+
+    public User(int no, String id, String password, String name, String email, Gender gender) {
+        this.no = no;
+        this.id = id;
         this.password = password;
         this.name = name;
         this.email = email;
         this.gender = gender;
     }
 
+    public int getNo() {
+        return no;
+    }
+
+    public void setNo(int no) {
+        this.no = no;
+    }
+
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getPassword() {

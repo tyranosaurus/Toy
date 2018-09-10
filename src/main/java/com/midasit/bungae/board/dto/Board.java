@@ -4,35 +4,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private int id;
+    private int no;
     private String title;
-    private User writer;
     private String password;
     private String image;
     private String content;
     private int maxUserCount;
-    private List<User> userList = new ArrayList<User>();
+    private int userNo;
+    private List<Integer> userNoList = new ArrayList<Integer>();
 
     public Board() { }
 
-    public Board(int id, String title, User writer, String password, String image, String content, int maxUserCount) {
-        this.id = id;
+    public Board(int no, String title, int userNo, String password, String image, String content, int maxUserCount) {
+        this.no = no;
         this.title = title;
-        this.writer = writer;
+        this.userNo = userNo;
         this.password = password;
         this.image = image;
         this.content = content;
         this.maxUserCount = maxUserCount;
 
-        this.userList.add(writer);
+        this.userNoList.add(userNo);
     }
 
-    public int getId() {
-        return id;
+    public int getNo() {
+        return no;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setNo(int no) {
+        this.no = no;
     }
 
     public String getTitle() {
@@ -43,12 +43,12 @@ public class Board {
         this.title = title;
     }
 
-    public User getWriter() {
-        return writer;
+    public int getUserNo() {
+        return userNo;
     }
 
-    public void setWriter(User writer) {
-        this.writer = writer;
+    public void setUserNo(int userNo) {
+        this.userNo = userNo;
     }
 
     public String getPassword() {
@@ -83,15 +83,15 @@ public class Board {
         this.maxUserCount = maxUserCount;
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public List<Integer> getUserNoList() {
+        return userNoList;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setUserNoList(List<Integer> userNoList) {
+        this.userNoList = userNoList;
     }
 
-    public void addUser(User joinUser) {
-        userList.add(joinUser);
+    public void addUser(int joinUserNo) {
+        userNoList.add(joinUserNo);
     }
 }

@@ -1,7 +1,18 @@
 package com.midasit.bungae.board.repository;
 
+import com.midasit.bungae.board.dto.Board;
+import com.midasit.bungae.board.dto.User;
+
+import java.util.List;
+
 public interface Repository {
-    // 서비스에 필요한 메소드 정의 -> 구현 클래스 사용해서 바로 사용할 수 있도록
-    // CURD
-    // 기타 데이터 호출
+    List<Board> getAll();
+    Board getById(int id);
+    void add(Board board);
+    int getCount();
+    void update(int boardId, String title, String image, String content);
+    int delete(int boardId);
+    void addUserInBoard(int boardId, User joinUser);
+    List<User> getAllUser(int boardId);
+
 }

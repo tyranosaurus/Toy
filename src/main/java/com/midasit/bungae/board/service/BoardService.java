@@ -10,25 +10,24 @@ import com.midasit.bungae.board.exception.NoJoinUserException;
 
 import java.util.List;
 
- class BoardService {
-
+public class BoardService {
     private static final int MAX_BOARD_COUNT = 5;
 
     BoardMemoryRepository boardMemoryRepository = null;
 
-    BoardService() {
+    public BoardService() {
         boardMemoryRepository = new BoardMemoryRepository();
     }
 
-    List<Board> getAllBoard() {
+    public List<Board> getAllBoard() {
         return boardMemoryRepository.getAll();
     }
 
-    Board getBoardById(int id) {
+    public Board getBoardById(int id) {
         return boardMemoryRepository.getById(id);
     }
 
-    void createNew(Board board) {
+    public void createNew(Board board) {
         if ( getBoardCount() < MAX_BOARD_COUNT ) {
             boardMemoryRepository.add(board);
         } else {
@@ -36,11 +35,11 @@ import java.util.List;
         }
     }
 
-    int getBoardCount() {
+    public int getBoardCount() {
         return boardMemoryRepository.getCount();
     }
 
-    boolean isEqualWriterId(int boardId, User loginUser) {
+    public boolean isEqualWriterId(int boardId, User loginUser) {
         Board board = boardMemoryRepository.getById(boardId);
 
         if ( board.getWriter().getId().equals(loginUser.getId()) ) {
@@ -50,7 +49,7 @@ import java.util.List;
         return false;
     }
 
-    boolean isEqualPassword(int boardId, String rightPassword) {
+    public boolean isEqualPassword(int boardId, String rightPassword) {
         Board board = boardMemoryRepository.getById(boardId);
 
         if ( board.getPassword().equals(rightPassword) ) {
@@ -60,15 +59,15 @@ import java.util.List;
         return false;
     }
 
-     void modifyBoard(int boardId, String title, String image, String content) {
+    public void modifyBoard(int boardId, String title, String image, String content) {
         boardMemoryRepository.update(boardId, title, image, content);
     }
 
-     int deleteBoard(int boardId) {
+    public int deleteBoard(int boardId) {
         return boardMemoryRepository.delete(boardId);
     }
 
-    void joinUserAtBoard(int boardId, User joinUser) {
+    public void joinUserAtBoard(int boardId, User joinUser) {
         Board board = boardMemoryRepository.getById(boardId);
 
         if ( board.getUserList().size() < board.getMaxUserCount() ) {
@@ -82,19 +81,19 @@ import java.util.List;
         }
     }
 
-     List<User> getAllUserInBoard(int boardId) {
+    public List<User> getAllUserInBoard(int boardId) {
         return boardMemoryRepository.getAllUser(boardId);
     }
 
-     String cancelJoinFromBoard(int boardId, String cancelUserId) {
+    public String cancelJoinFromBoard(int boardId, String cancelUserId) {
         Board board = boardMemoryRepository.getById(boardId);
         List<User> userList = board.getUserList();
 
         for ( int i = 0; i < userList.size(); i++ ) {
             if ( userList.get(i).getId().equals(cancelUserId) ) {
-                return userList.remove(i).getId();
-            }
+            return userList.remove(i).getId();
         }
+    }
 
         throw new NoJoinUserException("번개모임에 참여하지 않았습니다.");
     }

@@ -1,5 +1,6 @@
 package com.midasit.bungae.board.controller;
 
+import com.midasit.bungae.board.service.BoardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 

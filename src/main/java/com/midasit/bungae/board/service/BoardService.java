@@ -6,7 +6,6 @@ import com.midasit.bungae.board.exception.AlreadyJoinUserException;
 import com.midasit.bungae.board.exception.MaxBoardOverflowException;
 import com.midasit.bungae.board.exception.MaxUserOverflowInBoardException;
 import com.midasit.bungae.board.exception.NoJoinUserException;
-import com.midasit.bungae.board.repository.BoardDaoRepository;
 import com.midasit.bungae.board.repository.RepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,7 @@ import java.util.List;
 @Service
 public class BoardService {
     @Autowired
-    BoardDaoRepository boardDaoRepository;
-    //RepositoryInterface boardDaoRepository;
+    RepositoryInterface boardDaoRepository;
 
 
     private static final int MAX_BOARD_COUNT = 5;

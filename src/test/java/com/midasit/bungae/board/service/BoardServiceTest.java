@@ -79,6 +79,7 @@ public class BoardServiceTest {
         boardService.createNew(new Board(0, "타이틀3", 3, "패스워드3", "사진3", "내용3", 3));
         boardService.createNew(new Board(0, "타이틀4", 1, "패스워드4", "사진4", "내용4", 5));
         boardService.createNew(new Board(0, "타이틀5", 1, "패스워드5", "사진5", "내용5", 10));
+
         // act (when)
         // assert (then)
         boardService.createNew(new Board(0, "타이틀6", 1, "패스워드6", "사진6", "내용6", 3));

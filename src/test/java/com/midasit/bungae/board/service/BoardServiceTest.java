@@ -4,6 +4,8 @@ import com.midasit.bungae.board.Gender;
 import com.midasit.bungae.board.dto.User;
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.board.exception.*;
+import com.midasit.bungae.boardUser.repository.BoardUserDaoRepository;
+import com.midasit.bungae.boardUser.repository.BoardUserRepositoryInterface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +23,9 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = "file:web/WEB-INF/applicationContext.xml")
 public class BoardServiceTest {
     @Autowired
-    BoardService boardService;
+    BoardServiceInterface boardServiceImpl;
+    @Autowired
+    BoardUserRepositoryInterface boardUserDaoRepository;
 
     User user1 = null;
     User user2 = null;
@@ -36,24 +40,24 @@ public class BoardServiceTest {
 
     @After
     public void tearDown() throws Exception {
-        boardService.deleteAll();
+        boardServiceImpl.deleteAll();
     }
 
     @Test
     public void 모든_게시물을_가져온다() {
         // arrange (given)
-        int boardNo1 = boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
-        int boardNo2 = boardService.createNew(new Board(0, "타이틀2", 2, "패스워드2", "사진2", "내용2", 10));
-        int boardNo3 = boardService.createNew(new Board(0, "타이틀3", 3, "패스워드3", "사진3", "내용3", 3));
+        int boardNo1 = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
+        int boardNo2 = boardServiceImpl.createNew(new Board(0, "타이틀2", 2, "패스워드2", "사진2", "내용2", 10));
+        int boardNo3 = boardServiceImpl.createNew(new Board(0, "타이틀3", 3, "패스워드3", "사진3", "내용3", 3));
 
         // act (when)
-        List<Board> allBoards = boardService.getAllBoard();
+        List<Board> allBoards = boardServiceImpl.getAllBoard();
 
         // assert (then)
-        assertEquals(boardService.getBoardCount(), 3);
-        isEqualAllValueOfBoard(allBoards.get(0), boardService.getBoardByNo(boardNo1));
-        isEqualAllValueOfBoard(allBoards.get(1), boardService.getBoardByNo(boardNo2));
-        isEqualAllValueOfBoard(allBoards.get(2), boardService.getBoardByNo(boardNo3));
+        assertEquals(boardServiceImpl.getBoardCount(), 3);
+        isEqualAllValueOfBoard(allBoards.get(0), boardServiceImpl.getBoardByNo(boardNo1));
+        isEqualAllValueOfBoard(allBoards.get(1), boardServiceImpl.getBoardByNo(boardNo2));
+        isEqualAllValueOfBoard(allBoards.get(2), boardServiceImpl.getBoardByNo(boardNo3));
     }
 
     @Test
@@ -64,63 +68,63 @@ public class BoardServiceTest {
 
         // act (when)
         // assert (then)
-        Board getBoard1 = boardService.getBoardByNo(boardService.createNew(newBoard1));
+        Board getBoard1 = boardServiceImpl.getBoardByNo(boardServiceImpl.createNew(newBoard1));
         isEqualAllValueOfBoard(newBoard1, getBoard1);
 
-        Board getBoard2 = boardService.getBoardByNo(boardService.createNew(newBoard2));
+        Board getBoard2 = boardServiceImpl.getBoardByNo(boardServiceImpl.createNew(newBoard2));
         isEqualAllValueOfBoard(newBoard2, getBoard2);
     }
 
     @Test(expected = MaxBoardOverflowException.class)
     public void 게시물은_최대_5개까지만_등록할_수_있다() {
         // arrange (given)
-        boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
-        boardService.createNew(new Board(0, "타이틀2", 2, "패스워드2", "사진2", "내용2", 10));
-        boardService.createNew(new Board(0, "타이틀3", 3, "패스워드3", "사진3", "내용3", 3));
-        boardService.createNew(new Board(0, "타이틀4", 1, "패스워드4", "사진4", "내용4", 5));
-        boardService.createNew(new Board(0, "타이틀5", 1, "패스워드5", "사진5", "내용5", 10));
+        boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
+        boardServiceImpl.createNew(new Board(0, "타이틀2", 2, "패스워드2", "사진2", "내용2", 10));
+        boardServiceImpl.createNew(new Board(0, "타이틀3", 3, "패스워드3", "사진3", "내용3", 3));
+        boardServiceImpl.createNew(new Board(0, "타이틀4", 1, "패스워드4", "사진4", "내용4", 5));
+        boardServiceImpl.createNew(new Board(0, "타이틀5", 1, "패스워드5", "사진5", "내용5", 10));
 
         // act (when)
         // assert (then)
-        boardService.createNew(new Board(0, "타이틀6", 1, "패스워드6", "사진6", "내용6", 3));
+        boardServiceImpl.createNew(new Board(0, "타이틀6", 1, "패스워드6", "사진6", "내용6", 3));
     }
 
     @Test
     public void 작성자_아이디를_체크한다() {
         // arrange (given)
-        int boardNo = boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));;
+        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));;
         User rightUser = user1;
         User wrongUser = user2;
 
         // act (when)
         // assert (then)
-        assertTrue(boardService.isEqualWriter(boardNo, rightUser));
-        assertFalse(boardService.isEqualWriter(boardNo, wrongUser));
+        assertTrue(boardServiceImpl.isEqualWriter(boardNo, rightUser));
+        assertFalse(boardServiceImpl.isEqualWriter(boardNo, wrongUser));
     }
 
     @Test
     public void 게시글의_패스워드를_체크한다() {
         // arrange (given)
-        int boardNo = boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));;
+        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));;
         String rightPassword = "패스워드1";
         String wrongPassword = "틀린 패스워드";
 
         // act (when)
         // assert (then)
-        assertTrue(boardService.isEqualPassword(boardNo, rightPassword));
-        assertFalse(boardService.isEqualPassword(boardNo, wrongPassword));
+        assertTrue(boardServiceImpl.isEqualPassword(boardNo, rightPassword));
+        assertFalse(boardServiceImpl.isEqualPassword(boardNo, wrongPassword));
     }
 
     @Test
     public void 게시글을_수정한다() {
         // arrange (given)
-        int boardNo = boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
+        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
 
         // act (when)
-        boardService.modifyBoard(boardNo, "수정 타이틀", "사진", "내용");
+        boardServiceImpl.modifyBoard(boardNo, "수정 타이틀", "사진", "내용");
 
         // assert (then)
-        Board modifiedBoard = boardService.getBoardByNo(boardNo);
+        Board modifiedBoard = boardServiceImpl.getBoardByNo(boardNo);
         assertEquals(modifiedBoard.getTitle(), "수정 타이틀");
         assertEquals(modifiedBoard.getImage(), "사진");
         assertEquals(modifiedBoard.getContent(), "내용");
@@ -129,62 +133,62 @@ public class BoardServiceTest {
     @Test(expected = EmptyResultDataAccessException.class)
     public void 게시글을_삭제한다() {
         // arrange (given)
-        int boardNo = boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
-        int currentBoardCount = boardService.getBoardCount();
+        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
+        int currentBoardCount = boardServiceImpl.getBoardCount();
 
         // act (when)
-        boardService.deleteBoard(boardNo);
+        boardServiceImpl.deleteBoard(boardNo);
 
         // assert (then)
-        assertEquals(boardService.getBoardCount(), currentBoardCount - 1);
-        assertNull(boardService.getBoardByNo(boardNo));
+        assertEquals(boardServiceImpl.getBoardCount(), currentBoardCount - 1);
+        assertNull(boardServiceImpl.getBoardByNo(boardNo));
     }
 
     @Test(expected = NoRightOfModifyAndDeleteException.class)
     public void 작성자가_아니면_수정_및_삭제하지_못한다() {
         // arrange (given)
-        int boardNo = boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
+        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
         User wrongUser = user2;
 
         // act (when)
         // assert (then)
-        assertFalse(boardService.isEqualWriter(boardNo, wrongUser));
+        assertFalse(boardServiceImpl.isEqualWriter(boardNo, wrongUser));
         throw new NoRightOfModifyAndDeleteException("현재 유저와 게시글의 작성자가 일치하지 않습니다.");
     }
 
     @Test(expected = NoRightOfModifyAndDeleteException.class)
     public void 게시글의_비밀번호가_일치하지_않으면_수정_및_삭제하지_못한다() {
         // arrange (given)
-        int boardNo = boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
+        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
         String wrongPassword = "틀린 패스워드";
 
         // act (when)
         // assert (then)
-        assertFalse(boardService.isEqualPassword(boardNo, wrongPassword));
+        assertFalse(boardServiceImpl.isEqualPassword(boardNo, wrongPassword));
         throw new NoRightOfModifyAndDeleteException("게시글의 비밀번호가 일치하지 않습니다.");
     }
 
     @Test
     public void 번개모임에_참여한다() {
         // arrange (given)
-        int boardNo = boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
+        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
         User joinUser = user2;
-        int beforeUserCount = boardService.getUserCountOfBoard(boardNo);
+        int beforeUserCount = boardServiceImpl.getUserCountOfBoard(boardNo);
 
         // act (when)
-        boardService.joinUserAtBoard(boardNo, joinUser.getNo());
+        boardServiceImpl.joinUserAtBoard(boardNo, joinUser.getNo());
 
         // assert (then)
-        assertEquals(beforeUserCount + 1, boardService.getUserCountOfBoard(boardNo));
+        assertEquals(beforeUserCount + 1, boardServiceImpl.getUserCountOfBoard(boardNo));
 
-        List<Integer> joinUserList = boardService.getUserNoListInBoard(boardNo);
+        List<Integer> joinUserList = boardServiceImpl.getUserNoListInBoard(boardNo);
         assertEquals(joinUserList.get(joinUserList.size() - 1).intValue(), joinUser.getNo());
     }
 
     @Test(expected = MaxUserOverflowInBoardException.class)
     public void 번개모임의_최대_참여인원을_넘으면_참여_할수없다() {
         // arrange (given)
-        int boardNo = boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
+        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
         User joinUser1 = new User(10, "참가 유저1", "참가 암호1", "참가 이름1", "참가 이메일1", Gender.MALE);
         User joinUser2 = new User(11, "참가 유저2", "참가 암호2", "참가 이름2", "참가 이메일2", Gender.FEMALE);
         User joinUser3 = new User(12, "참가 유저3", "참가 암호3", "참가 이름3", "참가 이메일3", Gender.MALE);
@@ -193,49 +197,51 @@ public class BoardServiceTest {
 
         // act (when)
         // assert (then)
-        boardService.joinUserAtBoard(boardNo, joinUser1.getNo());
-        boardService.joinUserAtBoard(boardNo, joinUser2.getNo());
-        boardService.joinUserAtBoard(boardNo, joinUser3.getNo());
-        boardService.joinUserAtBoard(boardNo, joinUser4.getNo());
-        boardService.joinUserAtBoard(boardNo, joinUser5.getNo());
+        boardServiceImpl.joinUserAtBoard(boardNo, joinUser1.getNo());
+        boardServiceImpl.joinUserAtBoard(boardNo, joinUser2.getNo());
+        boardServiceImpl.joinUserAtBoard(boardNo, joinUser3.getNo());
+        boardServiceImpl.joinUserAtBoard(boardNo, joinUser4.getNo());
+        boardServiceImpl.joinUserAtBoard(boardNo, joinUser5.getNo());
     }
 
     @Test(expected = AlreadyJoinUserException.class)
     public void 같은_번개모임에_중복으로_참여_할수없다() {
         // arrange (given)
-        int boardNo = boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
+        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
         User joinUser = user2;
 
         // act (when)
         // assert (then)
-        boardService.joinUserAtBoard(boardNo, joinUser.getNo());
-        boardService.joinUserAtBoard(boardNo, joinUser.getNo());
+        boardServiceImpl.joinUserAtBoard(boardNo, joinUser.getNo());
+        boardServiceImpl.joinUserAtBoard(boardNo, joinUser.getNo());
     }
 
     @Test
     public void 번개모임의_참여를_취소한다() {
         // arrange (given)
-        int boardNo = boardService.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
+        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
         User joinUser = user2;
 
         // act (when)
-        int beforeUserCount = boardService.getUserCountOfBoard(boardNo);
-        boardService.joinUserAtBoard(boardNo, joinUser.getNo());
+        int beforeUserCount = boardServiceImpl.getUserCountOfBoard(boardNo);
+        boardServiceImpl.joinUserAtBoard(boardNo, joinUser.getNo());
+        boardServiceImpl.cancelJoinFromBoard(boardNo, joinUser.getNo());
 
         // assert (then)
-        assertEquals(boardService.cancelJoinFromBoard(boardNo, joinUser.getNo()), joinUser.getNo());
-        assertEquals(beforeUserCount, boardService.getUserCountOfBoard(boardNo));
+        assertEquals(beforeUserCount, boardServiceImpl.getUserCountOfBoard(boardNo));
+        assertEquals(boardUserDaoRepository.hasUserNoAtBoard(boardNo, joinUser.getNo()), 0);
+
     }
 
     @Test(expected = NoJoinUserException.class)
     public void 참여하지_않고_참여취소는_안된다() {
         // arrange (given)
-        int boardId = 1;
+        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", 1, "패스워드1", "사진1", "내용1", 5));
         User joinUser = user2;
 
         // act (when)
         // assert (then)
-        assertEquals(boardService.cancelJoinFromBoard(boardId, joinUser.getNo()), joinUser.getNo());
+        boardServiceImpl.cancelJoinFromBoard(boardNo, joinUser.getNo());
     }
 
     private void isEqualAllValueOfBoard(Board board1, Board board2) {

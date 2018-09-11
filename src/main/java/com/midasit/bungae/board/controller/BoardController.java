@@ -1,6 +1,6 @@
 package com.midasit.bungae.board.controller;
 
-import com.midasit.bungae.board.service.BoardService;
+import com.midasit.bungae.board.service.BoardServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/board")
 public class BoardController {
     @Autowired
-    BoardService boardService;
+    BoardServiceInterface boardServiceImpl;
 
     @RequestMapping(value = "/main")
     public String showMain() {

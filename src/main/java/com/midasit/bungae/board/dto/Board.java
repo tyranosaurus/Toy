@@ -11,7 +11,7 @@ public class Board {
     private String content;
     private int maxUserCount;
     private int userNo;
-    private List<Integer> userNoList = new ArrayList<Integer>();
+    private List<Integer> userNoList = new ArrayList();
 
     public Board() { }
 

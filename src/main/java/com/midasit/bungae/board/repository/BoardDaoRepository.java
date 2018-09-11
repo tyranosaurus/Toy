@@ -14,9 +14,7 @@ import java.sql.*;
 import java.util.List;
 
 @Repository
-public class BoardDaoRepository implements RepositoryInterface {
-    @Autowired
-    DataSource dataSource;
+public class BoardDaoRepository implements BoardRepositoryInterface {
 
     private JdbcTemplate jdbcTemplate;
 
@@ -25,11 +23,11 @@ public class BoardDaoRepository implements RepositoryInterface {
             Board board = new Board();
             board.setNo(rs.getInt("no"));
             board.setTitle(rs.getString("title"));
-            board.setUserNo(rs.getInt("user_no"));
             board.setPassword(rs.getString("password"));
             board.setImage(rs.getString("image"));
             board.setContent(rs.getString("content"));
             board.setMaxUserCount(rs.getInt("max_user_count"));
+            board.setUserNo(rs.getInt("user_no"));
 
             return board;
         }
@@ -44,7 +42,7 @@ public class BoardDaoRepository implements RepositoryInterface {
 
     public List<Board> getAll() {
         return this.jdbcTemplate.query("select * from board order by no asc",
-                                        this.boardRowMapper);
+                                       this.boardRowMapper);
     }
 
     public Board getByNo(int no) {
@@ -71,8 +69,6 @@ public class BoardDaoRepository implements RepositoryInterface {
             }
         }, keyHolder);
 
-        this.jdbcTemplate.update("insert into board_user_list(no, board_no, user_no) values(null, ?, ?)", keyHolder.getKey().intValue(), board.getUserNo());
-
         return keyHolder.getKey().intValue();
     }
 
@@ -88,52 +84,12 @@ public class BoardDaoRepository implements RepositoryInterface {
                                  boardNo);
     }
 
-    public void delete(final int boardNo) {
+    public void delete(int boardNo) {
         this.jdbcTemplate.update("delete from board where no = ?",
                                  boardNo);
     }
 
     public void deleteAll() {
-        // board 전체 삭제
         this.jdbcTemplate.update("delete from board");
-        // board_user_list 전체 삭제
-        this.jdbcTemplate.update("delete from board_user_list");
-    }
-
-    public int getUserCount(int boardNo) {
-        return this.jdbcTemplate.queryForObject("select count(*) from board_user_list where board_no = ?",
-                                                new Object[] { boardNo },
-                                                Integer.class);
-    }
-
-    public void addUserNoIntoBoard(int boardNo, int joinUserNo) {
-        this.jdbcTemplate.update("insert into board_user_list(no, board_no, user_no) values(null, ?, ?)",
-                                 boardNo,
-                                 joinUserNo);
-    }
-
-    public List<Integer> getAllUser(int boardNo) {
-        return this.jdbcTemplate.queryForList("select user_no from board_user_list where board_no = ?",
-                                              new Object[] { boardNo },
-                                              Integer.class);
-    }
-
-    public int deleteUserAtBoard(int boardNo, int userNo) {
-        int deletedUserNo = this.jdbcTemplate.queryForObject("select user_no from board_user_list where board_no = ? and user_no = ?",
-                                                            new Object[] { boardNo, userNo },
-                                                            Integer.class);
-
-        this.jdbcTemplate.update("delete from board_user_list where board_no = ? and user_no = ?",
-                                 boardNo,
-                                 userNo);
-
-        return deletedUserNo;
-    }
-
-    public int hasUserNoAtBoard(int boardNo, int userNo) {
-        int hasUser = this.jdbcTemplate.queryForObject("select EXISTS (select * from board_user_list where board_no = ? and user_no = ?)",
-                                                           new Object[] { boardNo, userNo },
-                                                           Integer.class);
-        return hasUser;
     }
 }

@@ -8,7 +8,9 @@
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- Bean 스캔 패키지 설정 -->
-    <context:component-scan base-package="com.midasit.bungae.board.*" />
+    <context:component-scan base-package="com.midasit.bungae.board.service" />
+    <context:component-scan base-package="com.midasit.bungae.board.repository" />
+    <context:component-scan base-package="com.midasit.bungae.boardUser.repository" />
 
     <!-- Datasource -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">

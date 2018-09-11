@@ -6,21 +6,23 @@ import com.midasit.bungae.board.exception.AlreadyJoinUserException;
 import com.midasit.bungae.board.exception.MaxBoardOverflowException;
 import com.midasit.bungae.board.exception.MaxUserOverflowInBoardException;
 import com.midasit.bungae.board.exception.NoJoinUserException;
-import com.midasit.bungae.board.repository.RepositoryInterface;
+import com.midasit.bungae.board.repository.BoardRepositoryInterface;
+import com.midasit.bungae.boardUser.repository.BoardUserRepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class BoardService {
+public class BoardServiceImpl implements BoardServiceInterface {
     @Autowired
-    RepositoryInterface boardDaoRepository;
-
+    BoardRepositoryInterface boardDaoRepository;
+    @Autowired
+    BoardUserRepositoryInterface boardUserDaoRepository;
 
     private static final int MAX_BOARD_COUNT = 5;
 
-    public BoardService() { }
+    public BoardServiceImpl() { }
 
     public List<Board> getAllBoard() {
         return boardDaoRepository.getAll();
@@ -32,7 +34,10 @@ public class BoardService {
 
     public int createNew(Board board) {
         if ( getBoardCount() < MAX_BOARD_COUNT ) {
-            return boardDaoRepository.add(board);
+            int boardNo = boardDaoRepository.add(board);
+            boardUserDaoRepository.add(boardNo, board.getUserNo());
+
+            return boardNo;
         } else {
             throw new MaxBoardOverflowException("최대 게시글 수를 초과하였습니다.");
         }
@@ -67,21 +72,28 @@ public class BoardService {
     }
 
     public void deleteBoard(int boardNo) {
+        /**외래키 지정은 x, 이런 방식으로 진행, DB 논리모델시에는 관계 맺어줌.*/
+        // board 테이블 삭제
         boardDaoRepository.delete(boardNo);
+        // board_user 테이블 삭제
+        boardUserDaoRepository.delete(boardNo);
     }
 
     public void deleteAll() {
+        // board 테이블 삭제
         boardDaoRepository.deleteAll();
+        // board_user 테이블 삭제
+        boardUserDaoRepository.deleteAll();
     }
 
     public int getUserCountOfBoard(int boardNo) {
-        return boardDaoRepository.getUserCount(boardNo);
+        return boardUserDaoRepository.getUserCountAtBoard(boardNo);
     }
 
     public void joinUserAtBoard(int boardNo, int joinUserNo) {
         if ( getUserCountOfBoard(boardNo) < boardDaoRepository.getByNo(boardNo).getMaxUserCount() ) {
             if ( hasSameUser(boardNo, joinUserNo) ) {
-                boardDaoRepository.addUserNoIntoBoard(boardNo, joinUserNo);
+                boardUserDaoRepository.addUserNoToBoard(boardNo, joinUserNo);
             } else {
                 throw new AlreadyJoinUserException("이미 현재 번개모임에 참여하였습니다.");
             }
@@ -91,15 +103,15 @@ public class BoardService {
     }
 
     public List<Integer> getUserNoListInBoard(int boardNo) {
-        return boardDaoRepository.getAllUser(boardNo);
+        return boardUserDaoRepository.getAllUserAtBoard(boardNo);
     }
 
-    public int cancelJoinFromBoard(int boardNo, int userNo) {
-        if ( boardDaoRepository.hasUserNoAtBoard(boardNo, userNo) == 1) {
-            return boardDaoRepository.deleteUserAtBoard(boardNo, userNo);
+    public void cancelJoinFromBoard(int boardNo, int userNo) {
+        if ( boardUserDaoRepository.hasUserNoAtBoard(boardNo, userNo) == 1) {
+            boardUserDaoRepository.deleteUserAtBoard(boardNo, userNo);
+        } else {
+            throw new NoJoinUserException("번개모임에 참여하지 않았습니다.");
         }
-
-        throw new NoJoinUserException("번개모임에 참여하지 않았습니다.");
     }
 
     private boolean hasSameUser(int boardNo, int joinUserNo) {

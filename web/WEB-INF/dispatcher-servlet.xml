@@ -17,7 +17,9 @@
     <mvc:default-servlet-handler />
 
     <!-- Bean 스캔 패키지 설정 -->
-    <context:component-scan base-package="com.midasit.bungae.board.controller" />
+    <context:component-scan base-package="com.midasit.bungae.*">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
 
     <!-- ViewResolver 등록 -->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">

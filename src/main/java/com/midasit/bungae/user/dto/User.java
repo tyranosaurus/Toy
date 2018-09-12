@@ -1,6 +1,6 @@
-package com.midasit.bungae.board.dto;
+package com.midasit.bungae.user.dto;
 
-import com.midasit.bungae.board.Gender;
+import com.midasit.bungae.user.Gender;
 
 public class User {
     private int no;

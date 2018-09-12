@@ -1,23 +1,38 @@
 package com.midasit.bungae.board.controller;
 
-import com.midasit.bungae.board.service.BoardServiceInterface;
+import com.midasit.bungae.board.dto.Board;
+import com.midasit.bungae.board.service.BoardService;
+import com.midasit.bungae.boarddetail.dto.BoardDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/board")
 public class BoardController {
     @Autowired
-    BoardServiceInterface boardServiceImpl;
+    BoardService boardServiceImpl;
 
     @RequestMapping(value = "/main")
-    public String showMain() {
+    public String showMain(Model model) {
+        List<Board> boards = boardServiceImpl.getAll();
+
+        model.addAttribute("boards", boards);
+
         return "main";
     }
 
     @RequestMapping(value = "/detailForm")
-    public String showDetailForm() {
+    public String showDetailForm(@RequestParam int boardNo,
+                                 Model model) {
+        BoardDetail boardDetail = boardServiceImpl.getDetail(boardNo);
+
+        model.addAttribute("boardDetail", boardDetail);
+
         return "detailForm";
     }
 

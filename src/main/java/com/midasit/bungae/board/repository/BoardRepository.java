@@ -4,9 +4,9 @@ import com.midasit.bungae.board.dto.Board;
 
 import java.util.List;
 
-public interface BoardRepositoryInterface {
+public interface BoardRepository {
     List<Board> getAll();
-    Board getByNo(int no);
+    Board get(int no);
     int add(Board board);
     int getCount();
     void update(int boardNo, String title, String image, String content);

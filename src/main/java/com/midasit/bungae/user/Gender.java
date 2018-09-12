@@ -1,4 +1,4 @@
-package com.midasit.bungae.board;
+package com.midasit.bungae.user;
 
 public enum Gender {
     MALE(0), FEMALE(1);

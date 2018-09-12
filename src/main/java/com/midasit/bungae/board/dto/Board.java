@@ -1,7 +1,6 @@
 package com.midasit.bungae.board.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.midasit.bungae.user.dto.User;
 
 public class Board {
     private int no;
@@ -9,22 +8,19 @@ public class Board {
     private String password;
     private String image;
     private String content;
-    private int maxUserCount;
-    private int userNo;
-    private List<Integer> userNoList = new ArrayList();
+    private int maxParticipantCount;
+    private User writer;
 
     public Board() { }
 
-    public Board(int no, String title, int userNo, String password, String image, String content, int maxUserCount) {
+    public Board(int no, String title, String password, String image, String content, int maxParticipantCount, User writer) {
         this.no = no;
         this.title = title;
-        this.userNo = userNo;
         this.password = password;
         this.image = image;
         this.content = content;
-        this.maxUserCount = maxUserCount;
-
-        this.userNoList.add(userNo);
+        this.maxParticipantCount = maxParticipantCount;
+        this.writer = writer;
     }
 
     public int getNo() {
@@ -41,14 +37,6 @@ public class Board {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public int getUserNo() {
-        return userNo;
-    }
-
-    public void setUserNo(int userNo) {
-        this.userNo = userNo;
     }
 
     public String getPassword() {
@@ -75,23 +63,19 @@ public class Board {
         this.content = content;
     }
 
-    public int getMaxUserCount() {
-        return maxUserCount;
+    public int getMaxParticipantCount() {
+        return maxParticipantCount;
     }
 
-    public void setMaxUserCount(int maxUserCount) {
-        this.maxUserCount = maxUserCount;
+    public void setMaxParticipantCount(int maxParticipantCount) {
+        this.maxParticipantCount = maxParticipantCount;
     }
 
-    public List<Integer> getUserNoList() {
-        return userNoList;
+    public User getWriter() {
+        return writer;
     }
 
-    public void setUserNoList(List<Integer> userNoList) {
-        this.userNoList = userNoList;
-    }
-
-    public void addUser(int joinUserNo) {
-        userNoList.add(joinUserNo);
+    public void setWriter(User writer) {
+        this.writer = writer;
     }
 }

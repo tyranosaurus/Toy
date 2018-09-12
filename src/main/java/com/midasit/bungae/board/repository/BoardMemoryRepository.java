@@ -1,7 +1,6 @@
 package com.midasit.bungae.board.repository;
 
 import com.midasit.bungae.board.dto.Board;
-import com.midasit.bungae.board.dto.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,15 +50,11 @@ public class BoardMemoryRepository {
     }
 
     public void addUserIntoBoard(int boardNo, int joinUser) {
-        Board board = getByNo(boardNo);
-
-        board.addUser(joinUser);
+        throw new UnsupportedOperationException();
     }
 
     public List<Integer> getAllUser(int boardNo) {
-        Board board = boardList.get(getIndex(boardNo));
-
-        return board.getUserNoList();
+        throw new UnsupportedOperationException();
     }
 
     public void addUserNoIntoBoard(int boardNo, int joinUserNo) {

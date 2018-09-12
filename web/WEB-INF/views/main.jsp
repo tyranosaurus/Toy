@@ -6,6 +6,10 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <html>
 <head>
     <title>썬더볼트</title>
@@ -26,120 +30,28 @@
         </thead>
 
         <tbody>
-            <tr height="35" align="center">
-                <td>1</td>
-                <td>
-                    <a href="/Toy/board/detailForm">타이틀1</a>
-                </td>
-                <td>작성자1</td>
-                <td>
-                    <div style="float:left; margin-right:-10px">
-                        <form action="/Toy/board/modifyForm" method="get">
-                            <button type="submit">수정</button>
-                        </form>
-                    </div>
-                    <div style="float:right; margin-left:-10px">
-                        <form action="/Toy/board/delete" method="post">
-                            <button type="submit">삭제</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            <tr height="35" align="center">
-                <td>2</td>
-                <td>
-                    <a href="/Toy/board/detailForm">타이틀2</a>
-                </td>
-                <td>작성자2</td>
-                <td>
-                    <div style="float:left; margin-right:-10px">
-                        <form action="/Toy/board/modifyForm" method="get">
-                            <button type="submit">수정</button>
-                        </form>
-                    </div>
-                    <div style="float:right; margin-left:-10px">
-                        <form action="/Toy/board/delete" method="post">
-                            <button type="submit">삭제</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            <tr height="35" align="center">
-                <td>3</td>
-                <td>
-                    <a href="/Toy/board/detailForm">타이틀3</a>
-                </td>
-                <td>작성자3</td>
-                <td>
-                    <div style="float:left; margin-right:-10px">
-                        <form action="/Toy/board/modifyForm" method="get">
-                            <button type="submit">수정</button>
-                        </form>
-                    </div>
-                    <div style="float:right; margin-left:-10px">
-                        <form action="/Toy/board/delete" method="post">
-                            <button type="submit">삭제</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            <tr height="35" align="center">
-                <td>4</td>
-                <td>
-                    <a href="/Toy/board/detailForm">타이틀4</a>
-                </td>
-                <td>작성자4</td>
-                <td>
-                    <div style="float:left; margin-right:-10px">
-                        <form action="/Toy/board/modifyForm" method="get">
-                            <button type="submit">수정</button>
-                        </form>
-                    </div>
-                    <div style="float:right; margin-left:-10px">
-                        <form action="/Toy/board/delete" method="post">
-                            <button type="submit">삭제</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            <tr height="35" align="center">
-                <td>5</td>
-                <td>
-                    <a href="/Toy/board/detailForm">타이틀5</a>
-                </td>
-                <td>작성자5</td>
-                <td>
-                    <div style="float:left; margin-right:-10px">
-                        <form action="/Toy/board/modifyForm" method="get">
-                            <button type="submit">수정</button>
-                        </form>
-                    </div>
-                    <div style="float:right; margin-left:-10px">
-                        <form action="/Toy/board/delete" method="post">
-                            <button type="submit">삭제</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            <tr height="35" align="center">
-                <td>6</td>
-                <td>
-                    <a href="/Toy/board/detailForm">타이틀6</a>
-                </td>
-                <td>작성자6</td>
-                <td>
-                    <div style="float:left; margin-right:-10px">
-                        <form action="/Toy/board/modifyForm" method="get">
-                            <button type="submit">수정</button>
-                        </form>
-                    </div>
-                    <div style="float:right; margin-left:-10px">
-                        <form action="/Toy/board/delete" method="post">
-                            <button type="submit">삭제</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
+            <c:forEach var="board" items="${boards}" begin="0" end="${boards.size() - 1}" step="1" varStatus="status">
+                <tr height="35" align="center">
+                    <td>${status.count}</td>
+                    <td>
+                        <a href="/Toy/board/detailForm?boardNo=${board.no}">${board.title}</a>
+                    </td>
+                    <td>${board.writer.id}</td>
+                    <td>
+                        <div style="float:left; margin-right:-10px">
+                            <form action="/Toy/board/modifyForm" method="get">
+                                <button type="submit">수정</button>
+                            </form>
+                        </div>
+                        <div style="float:right; margin-left:-10px">
+                            <form action="/Toy/board/delete" method="post">
+                                <button type="submit">삭제</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </c:forEach>
+
         </tbody>
     </table>
 

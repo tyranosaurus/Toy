@@ -2,16 +2,14 @@ package com.midasit.bungae.board.service;
 
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.board.exception.MaxBoardOverflowException;
-import com.midasit.bungae.board.exception.MaxUserOverflowInBoardException;
-import com.midasit.bungae.board.repository.BoardRepositoryInterface;
-import com.midasit.bungae.boardUser.repository.BoardUserRepositoryInterface;
+import com.midasit.bungae.board.repository.BoardRepository;
+import com.midasit.bungae.boarduser.repository.BoardUserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.times;
@@ -25,10 +23,10 @@ public class BoardServiceImplTest {
     private final BoardServiceImpl boardService = new BoardServiceImpl();
 
     @Mock
-    BoardRepositoryInterface boardDaoRepository;
+    BoardRepository boardDaoRepository;
 
     @Mock
-    BoardUserRepositoryInterface boardUserDaoRepository;
+    BoardUserRepository boardUserDaoRepository;
 
     @Test
     public void createNew_success() {

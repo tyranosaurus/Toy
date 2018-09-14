@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/board")
@@ -108,10 +110,13 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/allBoard")
-    @ResponseBody // body에 json 으로 담아서 보내라. 이때의 키는 뭘까.
-    public List<Board> readAllBoard() {
+    @ResponseBody // body에 json 으로 담아서 보내라. 이때의 키는 뭘까. 어떻게 @esponseBody는 자동으로 JSON으로 바꿔주는 걸까?, @RequestBody VS @ResponseBody
+    public Map<String, List<Board>> readAllBoard() {
         List<Board> boards = boardService.getAll();
 
-        return boards;
+        Map<String, List<Board>> map = new HashMap<>();
+        map.put("boards", boards);
+
+        return map;
     }
 }

@@ -110,7 +110,15 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/allBoard")
-    @ResponseBody // body에 json 으로 담아서 보내라. 이때의 키는 뭘까. 어떻게 @esponseBody는 자동으로 JSON으로 바꿔주는 걸까?, @RequestBody VS @ResponseBody
+    @ResponseBody // body에 json 으로 담아서 보내라. 이때의 키는 뭘까. , @RequestBody VS @ResponseBody
+
+    /**
+     * Q : 어떻게 @ResponseBody는 자동으로 JSON으로 바꿔주는 걸까?
+     * A : http://ismydream.tistory.com/140
+     *
+     * */
+
+
     public Map<String, List<Board>> readAllBoard() {
         List<Board> boards = boardService.getAll();
 

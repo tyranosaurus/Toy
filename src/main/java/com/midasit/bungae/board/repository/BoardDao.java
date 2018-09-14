@@ -126,16 +126,22 @@ public class BoardDao implements BoardRepository {
     }
 
     @Override
-    public void update(int boardNo, String title, String image, String content) {
+    public void update(int boardNo, String title, String image, String content, int maxParticipantCount, String password) {
         String sql = "update board " +
-                     "set title = ?, image = ?, content = ? " +
-                     "where no = ?";
+                     "set title = ?, " +
+                         "image = ?, " +
+                         "content = ?, " +
+                         "max_user_count = ? " +
+                     "where no = ? " +
+                            "and password = ?";
 
         this.jdbcTemplate.update(sql,
                                  title,
                                  image,
                                  content,
-                                 boardNo);
+                                 maxParticipantCount,
+                                 boardNo,
+                                 password);
     }
 
     @Override

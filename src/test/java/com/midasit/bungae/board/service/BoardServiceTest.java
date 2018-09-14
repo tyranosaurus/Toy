@@ -1,11 +1,10 @@
 package com.midasit.bungae.board.service;
 
-import com.midasit.bungae.boarddetail.dto.BoardDetail;
-import com.midasit.bungae.user.Gender;
-import com.midasit.bungae.user.dto.User;
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.board.exception.*;
 import com.midasit.bungae.boarduser.repository.BoardUserRepository;
+import com.midasit.bungae.user.Gender;
+import com.midasit.bungae.user.dto.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,12 +14,12 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.*;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "file:web/WEB-INF/applicationContext.xml")
+@ContextConfiguration(locations = "file:web/WEB-INF/applicationContext_test.xml")
 public class BoardServiceTest {
     @Autowired
     BoardService boardServiceImpl;
@@ -30,14 +29,12 @@ public class BoardServiceTest {
     User user1 = null;
     User user2 = null;
     User user3 = null;
-    User user4 = null;
 
     @Before
     public void setUp() throws Exception {
         this.user1 = new User(1, "아이디1", "암호1", "이름1", "이메일1", Gender.MALE);
         this.user2 = new User(2, "아이디2", "암호2", "이름2", "이메일2", Gender.FEMALE);
         this.user3 = new User(3, "아이디3", "암호3", "이름3", "이메일3", Gender.MALE);
-        this.user4 = new User(4, "아이디4", "암호4", "이름4", "이메일4", Gender.FEMALE);
     }
 
     @After
@@ -100,8 +97,8 @@ public class BoardServiceTest {
 
         // act (when)
         // assert (then)
-        assertTrue(boardServiceImpl.isEqualWriter(boardNo, rightUser));
-        assertFalse(boardServiceImpl.isEqualWriter(boardNo, wrongUser));
+        assertTrue(boardServiceImpl.isEqualWriter(boardNo, rightUser.getNo()));
+        assertFalse(boardServiceImpl.isEqualWriter(boardNo, wrongUser.getNo()));
     }
 
     @Test
@@ -123,12 +120,12 @@ public class BoardServiceTest {
         int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", "패스워드1", "사진1", "내용1", 5, user1));
 
         // act (when)
-        boardServiceImpl.modify(boardNo, "수정 타이틀", "사진", "내용");
+        boardServiceImpl.modify(boardNo, "수정 타이틀", null, "내용", 5, "패스워드1", user1.getNo());
 
         // assert (then)
         Board modifiedBoard = boardServiceImpl.get(boardNo);
         assertEquals(modifiedBoard.getTitle(), "수정 타이틀");
-        assertEquals(modifiedBoard.getImage(), "사진");
+        assertEquals(modifiedBoard.getImage(), null);
         assertEquals(modifiedBoard.getContent(), "내용");
         isEqualAllValueOfUser(modifiedBoard.getWriter(), user1);
     }
@@ -140,7 +137,7 @@ public class BoardServiceTest {
         int currentBoardCount = boardServiceImpl.getCount();
 
         // act (when)
-        boardServiceImpl.delete(boardNo);
+        boardServiceImpl.delete(boardNo, "패스워드1", user1.getNo());
 
         // assert (then)
         assertEquals(boardServiceImpl.getCount(), currentBoardCount - 1);
@@ -155,7 +152,7 @@ public class BoardServiceTest {
 
         // act (when)
         // assert (then)
-        assertFalse(boardServiceImpl.isEqualWriter(boardNo, wrongUser));
+        assertFalse(boardServiceImpl.isEqualWriter(boardNo, wrongUser.getNo()));
         throw new NoRightOfModifyAndDeleteException("현재 유저와 게시글의 작성자가 일치하지 않습니다.");
     }
 
@@ -245,29 +242,6 @@ public class BoardServiceTest {
         // act (when)
         // assert (then)
         boardServiceImpl.cancelParticipation(boardNo, participant.getNo());
-    }
-
-    @Test
-    public void 게시판_상세정보_가져온다() {
-        // arrange (given)
-        int boardNo = boardServiceImpl.createNew(new Board(0, "타이틀1", "패스워드1", "사진1", "내용1", 5, user1));
-        User participant1 = user2;
-        User participant2 = user3;
-        User participant3 = user4;
-
-        boardServiceImpl.participate(boardNo, participant1.getNo());
-        boardServiceImpl.participate(boardNo, participant2.getNo());
-        boardServiceImpl.participate(boardNo, participant3.getNo());
-
-        // act (when)
-        BoardDetail boardDetail = boardServiceImpl.getDetail(boardNo);
-
-        // assert (then)
-        assertEquals(4, boardDetail.getParticipants().size());
-        isEqualAllValueOfUser(boardDetail.getParticipants().get(0), user1);
-        isEqualAllValueOfUser(boardDetail.getParticipants().get(1), participant1);
-        isEqualAllValueOfUser(boardDetail.getParticipants().get(2), participant2);
-        isEqualAllValueOfUser(boardDetail.getParticipants().get(3), participant3);
     }
 
     private void isEqualAllValueOfBoard(Board board1, Board board2) {

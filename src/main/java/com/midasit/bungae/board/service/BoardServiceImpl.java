@@ -1,13 +1,10 @@
 package com.midasit.bungae.board.service;
 
 import com.midasit.bungae.board.dto.Board;
-import com.midasit.bungae.board.exception.AlreadyParticipantException;
-import com.midasit.bungae.board.exception.MaxParticipantOverflowInBoardException;
-import com.midasit.bungae.board.exception.NoParticipantException;
+import com.midasit.bungae.board.exception.*;
 import com.midasit.bungae.boarddetail.dto.BoardDetail;
 import com.midasit.bungae.boarddetail.repository.BoardDetailRepository;
 import com.midasit.bungae.user.dto.User;
-import com.midasit.bungae.board.exception.MaxBoardOverflowException;
 import com.midasit.bungae.board.repository.BoardRepository;
 import com.midasit.bungae.boarduser.repository.BoardUserRepository;
 import com.midasit.bungae.user.repository.UserRepository;
@@ -21,38 +18,32 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService {
     private static final int MAX_BOARD_COUNT = 5;
 
-    /* 네이밍 수정할 것 */
     @Autowired
-    BoardRepository boardDao;
+    BoardRepository boardRepository;
     @Autowired
-    BoardUserRepository boardUserDao;
+    BoardUserRepository boardUserRepository;
     @Autowired
-    UserRepository userDao;
+    UserRepository userRepository;
     @Autowired
-    BoardDetailRepository boardDetailDao;
+    BoardDetailRepository boardDetailRepository;
 
     public BoardServiceImpl() { }
 
     @Override
     public Board get(int no) {
-        return boardDao.get(no);
+        return boardRepository.get(no);
     }
 
     @Override
     public List<Board> getAll() {
-        return boardDao.getAll();
-    }
-
-    @Override
-    public BoardDetail getDetail(int boardNo) {
-        return boardDetailDao.get(boardNo);
+        return boardRepository.getAll();
     }
 
     @Override
     public int createNew(Board board) {
         if ( getCount() < MAX_BOARD_COUNT ) {
-            int boardNo = boardDao.add(board);
-            boardUserDao.add(boardNo, board.getWriter().getNo());
+            int boardNo = boardRepository.add(board);
+            boardUserRepository.add(boardNo, board.getWriter().getNo());
 
             return boardNo;
         } else {
@@ -62,14 +53,15 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public int getCount() {
-        return boardDao.getCount();
+        return boardRepository.getCount();
     }
 
     @Override
-    public boolean isEqualWriter(int boardNo, User loginUser) {
-        Board board = boardDao.get(boardNo);
+    public boolean isEqualWriter(int boardNo, int writerNo) {
+        Board board = boardRepository.get(boardNo);
+        User writer = userRepository.get(writerNo);
 
-        if ( board.getWriter().getNo() == loginUser.getNo() ) {
+        if ( board.getWriter().getNo() == writer.getNo() ) {
             return true;
         }
 
@@ -77,10 +69,10 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public boolean isEqualPassword(int boardNo, String rightPassword) {
-        Board board = boardDao.get(boardNo);
+    public boolean isEqualPassword(int boardNo, String password) {
+        Board board = boardRepository.get(boardNo);
 
-        if ( board.getPassword().equals(rightPassword) ) {
+        if ( board.getPassword().equals(password) ) {
             return true;
         }
 
@@ -88,38 +80,50 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void modify(int boardNo, String title, String image, String content) {
-        boardDao.update(boardNo, title, image, content);
+    public void modify(int boardNo, String title, String image, String content, int maxParticipantCount, String password, int writerNo) {
+        if ( isEqualWriter(boardNo, writerNo) ) {
+            if ( isEqualPassword(boardNo, password) ) {
+                boardRepository.update(boardNo, title, null, content, maxParticipantCount, password);
+            }
+        }
     }
 
     @Override
-    public void delete(int boardNo) {
-        // board_user 테이블 삭제
-        boardUserDao.deleteBoard(boardNo);
-        // board 테이블 삭제
-        boardDao.delete(boardNo);
+    public void delete(int boardNo, String password, int writerNo) {
+        if ( isEqualWriter(boardNo, writerNo) ) {
+            if ( isEqualPassword(boardNo, password) ) {
+                // board_user 테이블 삭제
+                boardUserRepository.deleteBoard(boardNo);
+                // board 테이블 삭제
+                boardRepository.delete(boardNo);
+            } else {
+                throw new NotEqualPasswordException("게시판의 비밀번호가 일치하지 않습니다.");
+            }
+        } else {
+            throw new NotEqualWriterException("작성자가 일치하지 않습니다.");
+        }
     }
 
     @Override
     public void deleteAll() {
         // board_user 테이블 삭제
-        boardUserDao.deleteAll();
+        boardUserRepository.deleteAll();
         // board 테이블 삭제
-        boardDao.deleteAll();
+        boardRepository.deleteAll();
     }
 
     @Override
     public int getParticipantCount(int boardNo) {
-        return boardUserDao.getParticipantCount(boardNo);
+        return boardUserRepository.getParticipantCount(boardNo);
     }
 
     @Override
     public List<User> getParticipants(int boardNo) {
         List<User> participants = new ArrayList<>();
-        List<Integer> participantNoList = boardUserDao.getParticipantNoList(boardNo);
+        List<Integer> participantNoList = boardUserRepository.getParticipantNoList(boardNo);
 
         for ( int i = 0; i < participantNoList.size(); i++ ) {
-            participants.add(userDao.get(participantNoList.get(i)));
+            participants.add(userRepository.get(participantNoList.get(i)));
         }
 
         return participants;
@@ -127,9 +131,9 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void participate(int boardNo, int participantNo) {
-        if ( getParticipantCount(boardNo) < boardDao.get(boardNo).getMaxParticipantCount() ) {
+        if ( getParticipantCount(boardNo) < boardRepository.get(boardNo).getMaxParticipantCount() ) {
             if ( hasSameUser(boardNo, participantNo) ) {
-                boardUserDao.addParticipant(boardNo, participantNo);
+                boardUserRepository.addParticipant(boardNo, participantNo);
             } else {
                 throw new AlreadyParticipantException("이미 현재 번개모임에 참여하였습니다.");
             }
@@ -140,15 +144,15 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void cancelParticipation(int boardNo, int userNo) {
-        if ( boardUserDao.hasParticipant(boardNo, userNo) == 1) {
-            boardUserDao.deleteParticipant(boardNo, userNo);
+        if ( boardUserRepository.hasParticipant(boardNo, userNo) == 1) {
+            boardUserRepository.deleteParticipant(boardNo, userNo);
         } else {
             throw new NoParticipantException("번개모임에 참여하지 않았습니다.");
         }
     }
 
     private boolean hasSameUser(int boardNo, int participantNo) {
-        List<Integer> participantNoList = boardUserDao.getParticipantNoList(boardNo);
+        List<Integer> participantNoList = boardUserRepository.getParticipantNoList(boardNo);
 
         for ( int i = 0; i < participantNoList.size(); i++ ) {
             if ( participantNoList.get(i) == participantNo ) {

@@ -13,7 +13,7 @@
 <head>
     <title>썬더볼트</title>
 </head>
-<body>
+<br>
     <table border="1" width="500" align="center">
         <thead>
             <tr>
@@ -42,7 +42,7 @@
                             </c:when>
 
                             <c:otherwise>
-                                ${participant.id},
+                                ${participant.id}
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
@@ -55,5 +55,12 @@
             </tr>
         </tbody>
     </table>
+
+    </br>
+
+    <form action="/Toy/board/list" method="GET" align="center">
+        <button type="submit">돌아가기</button>
+    </form>
+
 </body>
 </html>

@@ -60,7 +60,7 @@
         </br>
 
         <button type="submit">수정하기</button>
-        <a href="/Toy/board/list">취소</a>
+        <a href="/Toy/board/main">취소</a>
 
     </form>
 

@@ -1,12 +1,11 @@
 package com.midasit.bungae.board.service;
 
 import com.midasit.bungae.board.dto.Board;
-import com.midasit.bungae.board.exception.*;
-import com.midasit.bungae.boarddetail.dto.BoardDetail;
-import com.midasit.bungae.boarddetail.repository.BoardDetailRepository;
-import com.midasit.bungae.user.dto.User;
 import com.midasit.bungae.board.repository.BoardRepository;
+import com.midasit.bungae.boarddetail.repository.BoardDetailRepository;
 import com.midasit.bungae.boarduser.repository.BoardUserRepository;
+import com.midasit.bungae.exception.*;
+import com.midasit.bungae.user.dto.User;
 import com.midasit.bungae.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -155,7 +154,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void cancelParticipation(int boardNo, int userNo) {
-        if ( boardUserRepository.hasParticipant(boardNo, userNo) == 1) {
+        if ( boardUserRepository.hasParticipant(boardNo, userNo) == 1 ) {
             boardUserRepository.deleteParticipant(boardNo, userNo);
         } else {
             throw new NoParticipantException("번개모임에 참여하지 않았습니다.");

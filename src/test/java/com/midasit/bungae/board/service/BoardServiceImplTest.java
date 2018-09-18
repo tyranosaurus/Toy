@@ -1,7 +1,7 @@
 package com.midasit.bungae.board.service;
 
 import com.midasit.bungae.board.dto.Board;
-import com.midasit.bungae.board.exception.MaxBoardOverflowException;
+import com.midasit.bungae.exception.MaxBoardOverflowException;
 import com.midasit.bungae.board.repository.BoardRepository;
 import com.midasit.bungae.boarduser.repository.BoardUserRepository;
 import org.junit.Test;

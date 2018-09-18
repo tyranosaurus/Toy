@@ -1,5 +1,6 @@
 package com.midasit.bungae.boarddetail.service;
 
+import com.midasit.bungae.TestUtil;
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.board.service.BoardService;
 import com.midasit.bungae.boarddetail.dto.BoardDetail;
@@ -61,17 +62,9 @@ public class BoardDetailServiceTest {
 
         // assert (then)
         assertEquals(4, boardDetail.getParticipants().size());
-        isEqualAllValueOfUser(boardDetail.getParticipants().get(0), user1);
-        isEqualAllValueOfUser(boardDetail.getParticipants().get(1), participant1);
-        isEqualAllValueOfUser(boardDetail.getParticipants().get(2), participant2);
-        isEqualAllValueOfUser(boardDetail.getParticipants().get(3), participant3);
-    }
-
-    private void isEqualAllValueOfUser(User user1, User user2) {
-        assertEquals(user1.getId(), user2.getId());
-        assertEquals(user1.getPassword(), user2.getPassword());
-        assertEquals(user1.getName(), user2.getName());
-        assertEquals(user1.getEmail(), user2.getEmail());
-        assertEquals(user1.getGender(), user2.getGender());
+        TestUtil.isEqualAllValueOfUser(boardDetail.getParticipants().get(0), user1);
+        TestUtil.isEqualAllValueOfUser(boardDetail.getParticipants().get(1), participant1);
+        TestUtil.isEqualAllValueOfUser(boardDetail.getParticipants().get(2), participant2);
+        TestUtil.isEqualAllValueOfUser(boardDetail.getParticipants().get(3), participant3);
     }
 }

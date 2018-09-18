@@ -42,7 +42,19 @@ public class UserDao implements UserRepository {
                      "where no = ?";
 
         return this.jdbcTemplate.queryForObject(sql,
-                                                new Object[] {userNo},
+                                                new Object[] { userNo },
                                                 this.userRowMapper);
+    }
+
+    @Override
+    public int hasUser(String id, String password) {
+        String sql = "select exists (select * " +
+                                     "from user " +
+                                     "where id = ? " +
+                                            "and password = ?)";
+
+        return this.jdbcTemplate.queryForObject(sql,
+                                                new Object[] { id, password },
+                                                Integer.class);
     }
 }

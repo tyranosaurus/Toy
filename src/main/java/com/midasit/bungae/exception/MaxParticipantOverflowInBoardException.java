@@ -1,4 +1,4 @@
-package com.midasit.bungae.board.exception;
+package com.midasit.bungae.exception;
 
 public class MaxParticipantOverflowInBoardException extends RuntimeException {
     public MaxParticipantOverflowInBoardException() {

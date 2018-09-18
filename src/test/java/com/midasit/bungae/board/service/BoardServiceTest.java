@@ -1,8 +1,9 @@
 package com.midasit.bungae.board.service;
 
+import com.midasit.bungae.TestUtil;
 import com.midasit.bungae.board.dto.Board;
-import com.midasit.bungae.board.exception.*;
 import com.midasit.bungae.boarduser.repository.BoardUserRepository;
+import com.midasit.bungae.exception.*;
 import com.midasit.bungae.user.Gender;
 import com.midasit.bungae.user.dto.User;
 import org.junit.After;
@@ -127,7 +128,7 @@ public class BoardServiceTest {
         assertEquals(modifiedBoard.getTitle(), "수정 타이틀");
         assertEquals(modifiedBoard.getImage(), null);
         assertEquals(modifiedBoard.getContent(), "내용");
-        isEqualAllValueOfUser(modifiedBoard.getWriter(), user1);
+        TestUtil.isEqualAllValueOfUser(modifiedBoard.getWriter(), user1);
     }
 
     @Test(expected = EmptyResultDataAccessException.class)
@@ -182,7 +183,7 @@ public class BoardServiceTest {
         assertEquals(beforeUserCount + 1, boardServiceImpl.getParticipantCount(boardNo));
 
         List<User> participantList = boardServiceImpl.getParticipants(boardNo);
-        isEqualAllValueOfUser(participantList.get(participantList.size() - 1), participant);
+        TestUtil.isEqualAllValueOfUser(participantList.get(participantList.size() - 1), participant);
     }
 
     @Test(expected = MaxParticipantOverflowInBoardException.class)
@@ -250,14 +251,6 @@ public class BoardServiceTest {
         assertEquals(board1.getPassword(), board2.getPassword());
         assertEquals(board1.getImage(), board2.getImage());
         assertEquals(board1.getContent(), board2.getContent());
-    }
-
-    private void isEqualAllValueOfUser(User user1, User user2) {
-        assertEquals(user1.getId(), user2.getId());
-        assertEquals(user1.getPassword(), user2.getPassword());
-        assertEquals(user1.getName(), user2.getName());
-        assertEquals(user1.getEmail(), user2.getEmail());
-        assertEquals(user1.getGender(), user2.getGender());
     }
 }
 

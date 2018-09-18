@@ -12,57 +12,91 @@
 <html>
 <head>
     <title>썬더볼트</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" ></script>
 </head>
 <body>
+<script type="text/javascript">
+function create() {
+    var title =$('input[name=title]').val();
+    var content = $('textarea[name=content]').val();
+    var maxParticipantCount = Number($('input[name=maxParticipantCount]').val());
+    var password = $('input[name=password]').val();
 
-    <form action="/Toy/board/create" method="POST" align="center">
+    $.ajax({
+        url : "/Toy/board/create",
+        contentType: "application/json; charset=utf-8;",
+        method : "POST",
+        data : JSON.stringify({ title : title,
+                                content : content,
+                                maxParticipantCount : maxParticipantCount,
+                                password : password }),
+        dataType : "json",
+        success : function(data, status, xhr) {
+            window.location.href = xhr.getResponseHeader("redirect");
+        },
+        error : function(data, status, xhr) {
+            var errorCode = JSON.parse(data.responseText).ErrorCode;
 
-        <table border="1" width="500" style="margin-left: auto; margin-right: auto;" >
-            <thead>
-            <tr>
-                <th colspan="2" height="50">새 번개 등록</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    타이틀 : <input type="text" name="title"/>
-                </td>
-                <td>
-                    <%-- 로그인 구현시 로그인 정보를 세션에서 가져옴 --%>
-                    작성자 : <input type="text" name="writer"/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <img src="">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">내용</td>
-            </tr>
-            <tr align="center">
-                <td colspan="2">
-                    <textarea style="height: 100px; width: 100%;" name="content"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>최대 참가자 수</td>
-                <td><input type="text" name="maxParticipantCount"/></td>
-            </tr>
-            <tr>
-                <td>게시글 비밀번호</td>
-                <td><input type="text" name="password"/></td>
-            </tr>
-            </tbody>
-        </table>
+            switch ( errorCode ) {
+                case 630:
+                    alert("생성 실패 : 빈 칸을 모두 채워주세요.");
+                    break;
+                default:
+                    alert("알 수 없는 오류 발생");
+                    break;
+            }
 
-        </br>
+        }
+    });
+}
+</script>
 
-        <button type="submit">번개 등록하기</button>
-        <a href="/Toy/board/list">취소</a>
+    <table border="1" width="500" style="margin-left: auto; margin-right: auto;" >
+        <thead>
+        <tr>
+            <th colspan="2" height="50">새 번개 등록</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                타이틀 : <input type="text" name="title"/>
+            </td>
+            <td>
+                <%-- 로그인 구현시 로그인 정보를 세션에서 가져옴 --%>
+                작성자 : <input type="text" name="writer"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <img src="">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">내용</td>
+        </tr>
+        <tr align="center">
+            <td colspan="2">
+                <textarea style="height: 100px; width: 100%;" name="content"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>최대 참가자 수</td>
+            <td><input type="text" name="maxParticipantCount"/></td>
+        </tr>
+        <tr>
+            <td>게시글 비밀번호</td>
+            <td><input type="text" name="password"/></td>
+        </tr>
+        </tbody>
+    </table>
 
-    </form>
+    </br>
+
+    <div align="center">
+        <button type="submit" onclick="create()">번개 등록하기</button>
+        <a href="/Toy/board/main">취소</a>
+    </div>
 
 </body>
 </html>

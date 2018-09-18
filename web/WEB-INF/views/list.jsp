@@ -15,6 +15,7 @@
     <title>썬더볼트</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js" ></script>
 </head>
+<body>
 <script type="text/javascript">
     function showPasswordBox(obj, boardNo) {
         var passwordBox = '<input type="text" name="password-' + boardNo + '" value="">' +
@@ -83,7 +84,7 @@
                 '</td>' +
                 '<td>' + boards[i].writer.id + '</td>' +
                 '<td>' +
-                '<form action="/Toy/board/modifyForm?boardNo=' + boards[i].no + '" method="POST">' +
+                '<form action="/Toy/board/modifyForm/' + boards[i].no + '" method="GET">' +
                 '<button type="submit">수정</button>' +
                 '</form>' +
                 '</td>' +
@@ -98,7 +99,6 @@
 
     getList();
 </script>
-<body>
     <table border="1" width="60%" align="center">
         <thead>
         <tr>

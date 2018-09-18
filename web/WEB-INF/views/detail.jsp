@@ -33,15 +33,12 @@
         });
     }
 
-    /* JSP -> HTML 과정 공부할 것. 정리 -> Confluence 정리 */
     function renderDetail(boardDetail) {
         $("#boardDetail").empty();
 
-        var html =``;
-
         var html = '<tr>' +
-                        '<td>' + boardDetail.board.title + '</td>' +
-                        '<td>' + boardDetail.board.writer.id + '</td>' +
+                        '<td>타이틀 : ' + boardDetail.board.title + '</td>' +
+                        '<td>작성자 : ' + boardDetail.board.writer.id + '</td>' +
                     '</tr>' +
                     '<tr>' +
                         '<td colspan="2">' +

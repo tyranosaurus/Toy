@@ -41,6 +41,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public int createNew(Board board) {
+        if ( board.getTitle() == null || board.getTitle().length() < 1
+                || board.getPassword() == null || board.getPassword().length() < 1
+                || board.getContent() == null || board.getContent().length() < 1
+                || board.getMaxParticipantCount() < 1) {
+            throw new EmptyValueOfBoardCreationException("값이 없는 정보가 있습니다. 모든 칸을 채워주세요.");
+        }
+
         if ( getCount() < MAX_BOARD_COUNT ) {
             int boardNo = boardRepository.add(board);
             boardUserRepository.add(boardNo, board.getWriter().getNo());
@@ -84,7 +91,11 @@ public class BoardServiceImpl implements BoardService {
         if ( isEqualWriter(boardNo, writerNo) ) {
             if ( isEqualPassword(boardNo, password) ) {
                 boardRepository.update(boardNo, title, null, content, maxParticipantCount, password);
+            } else {
+                throw new NotEqualPasswordException("게시판의 비밀번호가 일치하지 않습니다.");
             }
+        } else {
+            throw new NotEqualWriterException("작성자가 일치하지 않습니다.");
         }
     }
 

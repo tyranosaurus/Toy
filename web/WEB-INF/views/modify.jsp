@@ -12,57 +12,118 @@
 <html>
 <head>
     <title>썬더볼트</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" ></script>
 </head>
 <body>
+<script type="text/javascript">
+    function getDetail() {
+        $.ajax({
+            url : "/Toy/board/detail",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8;",
+            data : { boardNo : ${boardNo} },
+            method : "GET",
+            dataType : "json",
+            success : function(data, status, xhr) {
+                renderModify(data["boardDetail"]);
+            },
+            error : function(xhr) {
+                alert("게시판 상세 정보를 불러오는데 실패 하였습니다.");
+            }
+        });
+    }
 
-    <form action="/Toy/board/modify" method="POST" align="center">
-        <input	type="hidden" name="boardNo" value="${board.no}">
+    function renderModify(boardDetail) {
+        $("#boardDetail").empty();
 
-        <table border="1" width="500" align="center">
-            <thead>
-            <tr>
-                <th colspan="2" height="50">번개 수정</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    타이틀 : <input type="text" name="title" value="${board.title}"/>
-                </td>
-                <td>
-                    작성자 : ${board.writer.id}
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <img src="">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">내용</td>
-            </tr>
-            <tr align="center">
-                <td colspan="2">
-                    <textarea style="height: 100px; width: 100%;" name="content">${board.content}</textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>최대 참가자 수</td>
-                <td><input type="text" name="maxParticipantCount" value="${board.maxParticipantCount}" /></td>
-            </tr>
-            <tr>
-                <td>게시글 비밀번호</td>
-                <td><input type="text" name="password"/></td>
-            </tr>
-            </tbody>
-        </table>
+        var html = '<tr>' +
+        '<td>타이틀 : <input type="text" name="title" value="' + boardDetail.board.title + '"/>' +
+            '</td>' +
+            '<td>작성자 : ' + boardDetail.board.writer.id + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td colspan="2">' +
+            '<img src="">' +
+            '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td colspan="2">내용</td>' +
+            '</tr>' +
+            '<tr align="center">' +
+            '<td colspan="2">' +
+            '<textarea style="height: 100px; width: 100%;" name="content">' + boardDetail.board.content + '</textarea>' +
+            '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td>최대 참가자 수</td>' +
+            '<td><input type="text" name="maxParticipantCount" value="' + boardDetail.board.maxParticipantCount + '" /></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td>게시글 비밀번호</td>' +
+            '<td><input type="text" name="password"/></td>' +
+            '</tr>';
 
-        </br>
+        $("#boardDetail").append(html);
+    }
 
-        <button type="submit">수정하기</button>
+    function modify() {
+        var boardNo = ${boardNo};
+        var title =$('input[name=title]').val();
+        var content = $('textarea[name=content]').val();
+        var maxParticipantCount = Number($('input[name=maxParticipantCount]').val());
+        var password = $('input[name=password]').val();
+
+        $.ajax({
+            url : "/Toy/board/modify",
+            contentType: "application/json; charset=utf-8;",
+            method : "POST",
+            data : JSON.stringify({ no : boardNo,
+                                    title : title,
+                                    content : content,
+                                    maxParticipantCount : maxParticipantCount,
+                                    password : password }),
+            dataType : "json",
+            success : function(data, status, xhr) {
+                window.location.href = xhr.getResponseHeader("redirect");
+            },
+            error : function(data, status, xhr) {
+                var errorCode = JSON.parse(data.responseText).ErrorCode;
+
+                switch ( errorCode ) {
+                    case 610:
+                        alert("수정 실패 : 게시판 작성자가 일치하지 않습니다.");
+                        break;
+                    case 620:
+                        alert("수정 실패 : 게시판 비밀번호가 일치하지 않습니다.");
+                        break;
+                    default:
+                        alert("알 수 없는 오류 발생");
+                        break;
+                }
+
+            }
+        });
+    }
+
+    getDetail();
+</script>
+
+    <input	type="hidden" name="boardNo" value="${boardNo}">
+
+    <table border="1" width="500" align="center">
+        <thead>
+        <tr>
+            <th colspan="2" height="50">번개 수정</th>
+        </tr>
+        </thead>
+        <tbody id="boardDetail"></tbody>
+    </table>
+
+    </br>
+
+    <div align="center">
+        <button id="modifyBoard" type="submit" onclick="modify()">수정하기</button>
         <a href="/Toy/board/main">취소</a>
-
-    </form>
+    </div>
 
 </body>
 </html>

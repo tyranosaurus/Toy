@@ -1,6 +1,7 @@
 package com.midasit.bungae.board.controller;
 
 import com.midasit.bungae.board.dto.Board;
+import com.midasit.bungae.board.exception.EmptyValueOfBoardCreationException;
 import com.midasit.bungae.board.exception.NotEqualPasswordException;
 import com.midasit.bungae.board.exception.NotEqualWriterException;
 import com.midasit.bungae.board.service.BoardService;
@@ -53,7 +54,7 @@ public class BoardController {
         return "detail";
     }
 
-    @GetMapping(value = "/detail")
+    @GetMapping(path = "/detail")
     @ResponseBody
     public Map<String, BoardDetail> readDetail(@RequestParam int boardNo) {
         Map<String, BoardDetail> map = new HashMap<>();
@@ -62,44 +63,56 @@ public class BoardController {
         return map;
     }
 
-    /******************************************************************************************************************************************/
-
-    @RequestMapping(value = "/createForm")
+    @GetMapping(path = "/createForm")
+    @ResponseBody
     public String showCreateForm() {
         return "create";
     }
 
-    @RequestMapping(value = "/create")
-    public String create(@RequestParam String title,
-                         @RequestParam String password,
-                         @RequestParam String content,
-                         @RequestParam int maxParticipantCount,
-                         @RequestParam String writer) {
+    @RequestMapping(path = "/create")
+    public Map<String, Integer> create(@RequestBody Board board,
+                         HttpServletResponse response) {
+        Map<String, Integer> map = new HashMap<>();
 
-        boardService.createNew(new Board(0, title, password, null, content, maxParticipantCount, this.writer));
+        try {
+            boardService.createNew(new Board(0, board.getTitle(), board.getPassword(), null, board.getContent(), board.getMaxParticipantCount(), this.writer));
+            response.setStatus(200);
+            response.addHeader("redirect", "/Toy/board/main");
+        } catch (EmptyValueOfBoardCreationException e) {
+            response.setStatus(500);
+            map.put("ErrorCode", 630);
+        }
 
-        return "redirect:/board/list";
+        return map;
     }
 
-    @RequestMapping(value = "/modifyForm")
-    public String showModifyForm(@RequestParam int boardNo,
+    @GetMapping(path = "/modifyForm/{boardNo}")
+    public String showModifyForm(@PathVariable int boardNo,
                                  Model model) {
-        Board board = boardService.get(boardNo);
-
-        model.addAttribute("board", board);
+        model.addAttribute("boardNo", boardNo);
 
         return "modify";
     }
 
-    @RequestMapping(value = "/modify")
-    public String modify(@RequestParam int boardNo,
-                         @RequestParam String title,
-                         @RequestParam String password,
-                         @RequestParam String content,
-                         @RequestParam int maxParticipantCount) {
-        boardService.modify(boardNo, title, null, content, maxParticipantCount, password, writer.getNo());
+    @PostMapping(path = "/modify")
+    @ResponseBody
+    public Map<String, Integer> modify(@RequestBody Board board,
+                                       HttpServletResponse response) {
+        Map<String, Integer> map = new HashMap<>();
 
-        return "redirect:/board/main";
+        try {
+            boardService.modify(board.getNo(), board.getTitle(), null, board.getContent(), board.getMaxParticipantCount(), board.getPassword(), writer.getNo());
+            response.setStatus(200);
+            response.addHeader("redirect", "/Toy/board/main");
+        } catch (NotEqualWriterException e) {
+            response.setStatus(500);
+            map.put("ErrorCode", 610);
+        } catch (NotEqualPasswordException e) {
+            response.setStatus(500);
+            map.put("ErrorCode", 620);
+        }
+
+        return map;
     }
 
     @PostMapping(path = "/delete")

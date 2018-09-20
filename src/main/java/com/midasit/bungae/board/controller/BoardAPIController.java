@@ -1,18 +1,21 @@
 package com.midasit.bungae.board.controller;
 
 import com.midasit.bungae.board.dto.Board;
-import com.midasit.bungae.exception.EmptyValueOfBoardCreationException;
-import com.midasit.bungae.exception.NotEqualPasswordException;
-import com.midasit.bungae.exception.NotEqualWriterException;
 import com.midasit.bungae.board.service.BoardService;
 import com.midasit.bungae.boarddetail.dto.BoardDetail;
 import com.midasit.bungae.boarddetail.service.BoardDetailService;
+import com.midasit.bungae.error.ErrorCode;
+import com.midasit.bungae.exception.EmptyValueOfBoardCreationException;
+import com.midasit.bungae.exception.NotEqualPasswordException;
+import com.midasit.bungae.exception.NotEqualWriterException;
 import com.midasit.bungae.user.Gender;
 import com.midasit.bungae.user.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
@@ -52,16 +55,16 @@ public class BoardAPIController {
     @RequestMapping(path = "/create")
     @ResponseBody
     public Map<String, Integer> create(@RequestBody Board board,
-                                       HttpServletResponse response) {
+                                       HttpServletResponse response,
+                                       HttpServletRequest request) {
         Map<String, Integer> map = new HashMap<>();
 
         try {
             boardService.createNew(new Board(0, board.getTitle(), board.getPassword(), null, board.getContent(), board.getMaxParticipantCount(), this.writer));
-            response.setStatus(200);
-            response.addHeader("redirect", "/Toy/board/main");
+            response.addHeader("redirect", request.getContextPath() + "/board/main");
         } catch (EmptyValueOfBoardCreationException e) {
-            response.setStatus(500);
-            map.put("ErrorCode", 630);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            map.put("ErrorCode", ErrorCode.EMPTY_VALUE_OF_BOARD_CREATION.getValue());
         }
 
         return map;
@@ -70,19 +73,19 @@ public class BoardAPIController {
     @PostMapping(path = "/modify")
     @ResponseBody
     public Map<String, Integer> modify(@RequestBody Board board,
-                                       HttpServletResponse response) {
+                                       HttpServletResponse response,
+                                       HttpServletRequest request) {
         Map<String, Integer> map = new HashMap<>();
 
         try {
             boardService.modify(board.getNo(), board.getTitle(), null, board.getContent(), board.getMaxParticipantCount(), board.getPassword(), writer.getNo());
-            response.setStatus(200);
-            response.addHeader("redirect", "/Toy/board/main");
+            response.addHeader("redirect", request.getContextPath() + "/board/main");
         } catch (NotEqualWriterException e) {
-            response.setStatus(500);
-            map.put("ErrorCode", 610);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            map.put("ErrorCode", ErrorCode.NOT_EQUAL_WRITER.getValue());
         } catch (NotEqualPasswordException e) {
-            response.setStatus(500);
-            map.put("ErrorCode", 620);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            map.put("ErrorCode", ErrorCode.NOT_EQUAL_PASSWORD.getValue());
         }
 
         return map;
@@ -98,11 +101,11 @@ public class BoardAPIController {
         try {
             boardService.delete(boardNo, password, writer.getNo());
         } catch (NotEqualWriterException e) {
-            response.setStatus(500);
-            map.put("ErrorCode", 610);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            map.put("ErrorCode", ErrorCode.NOT_EQUAL_WRITER.getValue());
         } catch (NotEqualPasswordException e) {
-            response.setStatus(500);
-            map.put("ErrorCode", 620);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            map.put("ErrorCode", ErrorCode.NOT_EQUAL_PASSWORD.getValue());
         }
 
         return map;

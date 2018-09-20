@@ -68,4 +68,16 @@ public class User {
     public void setGender(Gender gender) {
         this.gender = gender;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "no=" + no +
+                ", id='" + id + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", gender=" + gender +
+                '}';
+    }
 }

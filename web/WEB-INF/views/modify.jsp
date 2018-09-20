@@ -16,9 +16,14 @@
 </head>
 <body>
 <script type="text/javascript">
+    function getContextPath() {
+        var hostIndex = location.href.indexOf( location.host ) + location.host.length;
+        return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
+    }
+
     function getDetail() {
         $.ajax({
-            url : "/Toy/board/detail",
+            url : getContextPath() + "/board/detail",
             contentType: "application/x-www-form-urlencoded; charset=utf-8;",
             data : { boardNo : ${boardNo} },
             method : "GET",
@@ -73,7 +78,7 @@
         var password = $('input[name=password]').val();
 
         $.ajax({
-            url : "/Toy/board/modify",
+            url : getContextPath() + "/board/modify",
             contentType: "application/json; charset=utf-8;",
             method : "POST",
             data : JSON.stringify({ no : boardNo,
@@ -122,7 +127,7 @@
 
     <div align="center">
         <button id="modifyBoard" type="submit" onclick="modify()">수정하기</button>
-        <a href="/Toy/board/main">취소</a>
+        <a href="${pageContext.request.contextPath}/board/main">취소</a>
     </div>
 
 </body>

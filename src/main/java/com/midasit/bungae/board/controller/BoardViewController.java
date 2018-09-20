@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class BoardViewController {
     @GetMapping(path = "/main")
     public String showMain() {
-        return "list";
+        return "main";
     }
 
     @GetMapping(path = "/detailForm/{boardNo}")

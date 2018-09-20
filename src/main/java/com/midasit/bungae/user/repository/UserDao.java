@@ -47,6 +47,17 @@ public class UserDao implements UserRepository {
     }
 
     @Override
+    public User get(String id) {
+        String sql = "select * " +
+                     "from user " +
+                     "where id = ?";
+
+        return this.jdbcTemplate.queryForObject(sql,
+                                                new Object[] { id },
+                                                this.userRowMapper);
+    }
+
+    @Override
     public int hasUser(String id, String password) {
         String sql = "select exists (select * " +
                                      "from user " +

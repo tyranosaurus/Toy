@@ -16,39 +16,44 @@
 </head>
 <body>
 <script type="text/javascript">
-function create() {
-    var title =$('input[name=title]').val();
-    var content = $('textarea[name=content]').val();
-    var maxParticipantCount = Number($('input[name=maxParticipantCount]').val());
-    var password = $('input[name=password]').val();
+    function getContextPath() {
+        var hostIndex = location.href.indexOf( location.host ) + location.host.length;
+        return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
+    }
 
-    $.ajax({
-        url : "/Toy/board/create",
-        contentType: "application/json; charset=utf-8;",
-        method : "POST",
-        data : JSON.stringify({ title : title,
-                                content : content,
-                                maxParticipantCount : maxParticipantCount,
-                                password : password }),
-        dataType : "json",
-        success : function(data, status, xhr) {
-            window.location.href = xhr.getResponseHeader("redirect");
-        },
-        error : function(data, status, xhr) {
-            var errorCode = JSON.parse(data.responseText).ErrorCode;
+    function create() {
+        var title =$('input[name=title]').val();
+        var content = $('textarea[name=content]').val();
+        var maxParticipantCount = Number($('input[name=maxParticipantCount]').val());
+        var password = $('input[name=password]').val();
 
-            switch ( errorCode ) {
-                case 630:
-                    alert("생성 실패 : 빈 칸을 모두 채워주세요.");
-                    break;
-                default:
-                    alert("알 수 없는 오류 발생");
-                    break;
+        $.ajax({
+            url : getContextPath() + "/board/create",
+            contentType: "application/json; charset=utf-8;",
+            method : "POST",
+            data : JSON.stringify({ title : title,
+                                    content : content,
+                                    maxParticipantCount : maxParticipantCount,
+                                    password : password }),
+            dataType : "json",
+            success : function(data, status, xhr) {
+                window.location.href = xhr.getResponseHeader("redirect");
+            },
+            error : function(data, status, xhr) {
+                var errorCode = JSON.parse(data.responseText).ErrorCode;
+
+                switch ( errorCode ) {
+                    case 630:
+                        alert("생성 실패 : 빈 칸을 모두 채워주세요.");
+                        break;
+                    default:
+                        alert("알 수 없는 오류 발생");
+                        break;
+                }
+
             }
-
-        }
-    });
-}
+        });
+    }
 </script>
 
     <table border="1" width="500" style="margin-left: auto; margin-right: auto;" >
@@ -95,7 +100,9 @@ function create() {
 
     <div align="center">
         <button type="submit" onclick="create()">번개 등록하기</button>
-        <a href="/Toy/board/main">취소</a>
+        <a href="${pageContext.request.contextPath}
+
+        /board/main">취소</a>
     </div>
 
 </body>

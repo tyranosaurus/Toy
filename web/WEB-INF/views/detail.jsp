@@ -16,9 +16,14 @@
 </head>
 <body>
 <script type="text/javascript">
+    function getContextPath() {
+        var hostIndex = location.href.indexOf( location.host ) + location.host.length;
+        return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
+    }
+
     function getDetail() {
         $.ajax({
-            url : "/Toy/board/detail",
+            url : getContextPath() + "/board/detail",
             contentType: "application/x-www-form-urlencoded; charset=utf-8;",
             data : { boardNo : ${boardNo} },
             method : "GET",
@@ -83,7 +88,7 @@
 
     </br>
 
-    <form action="/Toy/board/main" method="GET" align="center">
+    <form action="${pageContext.request.contextPath}/board/main" method="GET" align="center">
         <button type="submit">돌아가기</button>
     </form>
 </body>

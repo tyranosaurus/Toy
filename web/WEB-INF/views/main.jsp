@@ -9,7 +9,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <html>
 <head>
     <title>썬더볼트</title>
@@ -17,6 +16,11 @@
 </head>
 <body>
 <script type="text/javascript">
+    function getContextPath() {
+        var hostIndex = location.href.indexOf( location.host ) + location.host.length;
+        return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
+    }
+
     function showPasswordBox(obj, boardNo) {
         var passwordBox = '<input type="text" name="password-' + boardNo + '" value="">' +
             '<button class="deleteButton" onclick="deleteBoard(' + boardNo + ')">삭제 확인</button>';
@@ -29,7 +33,7 @@
         var password = $('input[name=password-' + boardNo + ']').val();
 
         $.ajax({
-            url : "/Toy/board/delete",
+            url : getContextPath() + "/board/delete",
             contentType: "application/x-www-form-urlencoded; charset=utf-8;",
             method : "POST",
             data : { boardNo : boardNo, password : password },
@@ -58,7 +62,7 @@
 
     function getList() {
         $.ajax({
-            url : "/Toy/board/list",
+            url : getContextPath() + "/board/list",
             contentType: 'application/json; charset=utf-8;',
             method : "GET",
             dataType : "json",
@@ -80,11 +84,11 @@
                 '<tr height="35" align="center">' +
                 '<td>' + indexNo + '</td>' +
                 '<td>' +
-                '<a href="/Toy/board/detailForm/' + boards[i].no + '" >' + boards[i].title + '</a>' +
+                '<a href="' + getContextPath() + '/board/detailForm/' + boards[i].no + '" >' + boards[i].title + '</a>' +
                 '</td>' +
                 '<td>' + boards[i].writer.id + '</td>' +
                 '<td>' +
-                '<form action="/Toy/board/modifyForm/' + boards[i].no + '" method="GET">' +
+                '<form action="' + getContextPath() + '/board/modifyForm/' + boards[i].no + '" method="GET">' +
                 '<button type="submit">수정</button>' +
                 '</form>' +
                 '</td>' +
@@ -99,6 +103,14 @@
 
     getList();
 </script>
+    <div align="center">
+        <form action="${pageContext.request.contextPath}/login/logout" method="get" style="height:40px; width:150px">
+            <button type="submit">로그아웃</button>
+        </form>
+    </div>
+
+    <br>
+
     <table border="1" width="60%" align="center">
         <thead>
         <tr>
@@ -119,7 +131,7 @@
     <br/>
 
     <div align="center">
-        <form action="/Toy/board/createForm" method="get" style="height:40px; width:150px">
+        <form action="${pageContext.request.contextPath}/board/createForm" method="get" style="height:40px; width:150px">
             <button type="submit">새 번개 등록</button>
         </form>
     </div>

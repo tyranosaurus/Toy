@@ -101,8 +101,7 @@ public class BoardDao implements BoardRepository {
                 String sql = "insert into board(no, title, password, image, content, max_user_count, user_no) " +
                              "values (null, ?, ?, ?, ?, ?, ?)";
 
-                PreparedStatement ps = con.prepareStatement(sql,
-                                                            Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, board.getTitle());
                 ps.setString(2, board.getPassword());
                 ps.setString(3, board.getImage());

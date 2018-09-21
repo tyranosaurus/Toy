@@ -1,33 +1,35 @@
 package com.midasit.bungae.login.controller;
 
-import com.midasit.bungae.error.ErrorCode;
+import com.midasit.bungae.errorcode.ServerErrorCode;
+import com.midasit.bungae.exception.AlreadyJoinUserException;
 import com.midasit.bungae.exception.HasNoUserException;
 import com.midasit.bungae.login.service.LoginService;
 import com.midasit.bungae.user.dto.User;
 import com.midasit.bungae.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 @SessionAttributes("user")
 @RequestMapping(path = "/login")
-public class LoginAPIController {
+public class LoginRestController {
     @Autowired
     LoginService loginService;
     @Autowired
     UserService userService;
 
+    @ModelAttribute("user")
+    public User createLoginUserObject() {
+        return new User();
+    }
+
     @PostMapping(path = "/doLogin")
-    @ResponseBody
     public Map<String, Integer> doLogin(@ModelAttribute("user") User user,
                                         HttpServletResponse response,
                                         HttpServletRequest request) {
@@ -42,24 +44,26 @@ public class LoginAPIController {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.addHeader("redirect", request.getContextPath() + "/login/joinForm");
 
-            map.put("ErrorCode", ErrorCode.HAS_NO_USER.getValue());
+            map.put("ErrorCode", ServerErrorCode.HAS_NO_USER.getValue());
         }
 
         return map;
     }
 
-    @ModelAttribute("user")
-    public User createLoginUserObject() {
-        return new User();
-    }
+    @PostMapping(path = "/doJoin")
+    public Map<String, Integer> doJoin(@RequestBody User user,
+                                       HttpServletResponse response,
+                                       HttpServletRequest request) {
+        Map<String, Integer> map = new HashMap<>();
 
-    /* 여기서는 안쓰임 */
-    /*@ExceptionHandler(HttpSessionRequiredException.class)
-    public String exceptionHandler(HttpSession httpSession) {
-        if ( httpSession.getAttribute("user") == null ) {
-            return "redirect:/login/loginForm";
+        try {
+            loginService.join(user);
+            response.addHeader("redirect", request.getContextPath() + "/login/loginForm");
+        } catch (AlreadyJoinUserException e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            map.put("ErrorCode", ServerErrorCode.DUPLICATION_USER_ID.getValue());
         }
 
-        return null;
-    }*/
+        return map;
+    }
 }

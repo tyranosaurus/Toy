@@ -4,12 +4,14 @@ import com.midasit.bungae.user.Gender;
 import com.midasit.bungae.user.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Repository
 public class UserDao implements UserRepository {
@@ -67,5 +69,41 @@ public class UserDao implements UserRepository {
         return this.jdbcTemplate.queryForObject(sql,
                                                 new Object[] { id, password },
                                                 Integer.class);
+    }
+
+    @Override
+    public boolean hasId(String id) {
+        String sql = "select exists (select * " +
+                                     "from user " +
+                                     "where id = ?)";
+
+        if ( this.jdbcTemplate.queryForObject(sql, new Object[] { id }, Integer.class) > 0 ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public int create(User user) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        this.jdbcTemplate.update(new PreparedStatementCreator() {
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                String sql = "insert into user(no, id, password, name, email, gender) " +
+                             "values(null, ?, ?, ?, ?, ?);";
+
+                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, user.getId());
+                ps.setString(2, user.getPassword());
+                ps.setString(3, user.getName());
+                ps.setString(4, user.getEmail());
+                ps.setInt(5, user.getGender().getValue());
+
+                return ps;
+            }
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 }

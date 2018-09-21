@@ -145,7 +145,7 @@ public class BoardServiceImpl implements BoardService {
             if ( hasSameUser(boardNo, participantNo) ) {
                 boardUserRepository.addParticipant(boardNo, participantNo);
             } else {
-                throw new AlreadyParticipantException("이미 현재 번개모임에 참여하였습니다.");
+                throw new AlreadyParticipantException("이미 번개모임에 참여하였습니다.");
             }
         } else {
             throw new MaxParticipantOverflowInBoardException("최대 참가자 수를 초과하였습니다.");

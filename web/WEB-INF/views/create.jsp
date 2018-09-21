@@ -46,6 +46,9 @@
                     case 630:
                         alert("생성 실패 : 빈 칸을 모두 채워주세요.");
                         break;
+                    case 650:
+                        alert("생성 실패 : 최대 게시글 수를 초과하였습니다.");
+                        break;
                     default:
                         alert("알 수 없는 오류 발생");
                         break;
@@ -100,9 +103,7 @@
 
     <div align="center">
         <button type="submit" onclick="create()">번개 등록하기</button>
-        <a href="${pageContext.request.contextPath}
-
-        /board/main">취소</a>
+        <a href="${pageContext.request.contextPath}/board/main">취소</a>
     </div>
 
 </body>

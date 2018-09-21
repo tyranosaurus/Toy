@@ -78,7 +78,9 @@
     </br>
 
     <div align="center">
-        <button type="submit" onclick="">회원가입</button>
+        <form action="${pageContext.request.contextPath}/login/joinForm" method="GET" align="center">
+            <button type="submit" onclick="">회원가입</button>
+        </form>
     </div>
 
 </body>

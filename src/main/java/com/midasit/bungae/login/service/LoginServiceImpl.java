@@ -1,5 +1,6 @@
 package com.midasit.bungae.login.service;
 
+import com.midasit.bungae.exception.AlreadyJoinUserException;
 import com.midasit.bungae.exception.HasNoUserException;
 import com.midasit.bungae.user.dto.User;
 import com.midasit.bungae.user.repository.UserRepository;
@@ -22,6 +23,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void bindLoginUserInfo(User user, User loginUserInfo) {
+        user.setNo(loginUserInfo.getNo());
         user.setId(loginUserInfo.getId());
         user.setName(loginUserInfo.getName());
         user.setEmail(loginUserInfo.getEmail());
@@ -31,7 +33,11 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void logout() {
-
+    public void join(User user) {
+        if ( !userRepository.hasId(user.getId()) ) {
+            userRepository.create(user);
+        } else {
+            throw new AlreadyJoinUserException("이미 가입된 유저입니다.");
+        }
     }
 }

@@ -16,6 +16,8 @@
 </head>
 <body>
 <script type="text/javascript">
+    var boardInfo;
+
     function getContextPath() {
         var hostIndex = location.href.indexOf( location.host ) + location.host.length;
         return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
@@ -29,8 +31,8 @@
             method : "GET",
             dataType : "json",
             success : function(data, status, xhr) {
+                boardInfo = data["boardDetail"].board;
                 renderDetail(data["boardDetail"]);
-                addParticipants(data["boardDetail"].participants);
             },
             error : function(xhr) {
                 alert("게시판 상세 정보를 불러오는데 실패 하였습니다.");
@@ -40,6 +42,12 @@
 
     function renderDetail(boardDetail) {
         $("#boardDetail").empty();
+
+        var totalParticipants = '';
+
+        for ( var i in boardDetail.participants ) {
+            totalParticipants += boardDetail.participants[i].id + ", ";
+        }
 
         var html = '<tr>' +
                         '<td>타이틀 : ' + boardDetail.board.title + '</td>' +
@@ -55,6 +63,13 @@
                         '<td id="participants">' +
                         '</td>' +
                     '</tr>' +
+                    '</tr>' +
+                        '<td>참가/취소</td>' +
+                        '<td>' +
+                            '<button id="participation" onclick="participate()" >번개 참가</button>' +
+                            '<button id="cancel" onclick="cancelParticipate()" >번개 취소</button>' +
+                        '</td>' +
+                    '</tr>' +
                     '<tr align="center">' +
                         '<td colspan="2">' +
                            '<textarea style="height: 100px; width: 100%;">' + boardDetail.board.content + '</textarea>' +
@@ -62,17 +77,82 @@
                     '</tr>';
 
         $("#boardDetail").append(html);
+        $("#participants").text(totalParticipants);
+
+        for ( var i in boardDetail.participants ) {
+            if ( boardDetail.participants[i].id == '${sessionScope.user.id}') {
+                $("#participation").hide();
+                $("#cancel").show();
+
+                break;
+            } else {
+                $("#participation").show();
+                $("#cancel").hide();
+            }
+        }
     }
 
-    function addParticipants(participants) {
-        var totalParticipants = '';
+    function participate() {
+        var boardNo = boardInfo.no;
+        var userNo = ${sessionScope.user.no};
 
-        for ( var i in participants ) {
-            totalParticipants += participants[i].id + ", ";
-        }
+        $.ajax({
+            url : getContextPath() + "/board/participate",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8;",
+            method : "POST",
+            data : { boardNo : boardNo,
+                     userNo : userNo },
+            dataType : "json",
+            success : function(data, status, xhr) {
+                getDetail();
+            },
+            error : function(data, status, xhr) {
+                var errorCode = JSON.parse(data.responseText).ErrorCode;
 
+                switch ( errorCode ) {
+                    case 670:
+                        alert("참가 실패 : 이미 번개모임에 참여하였습니다.");
+                        break;
+                    case 680:
+                        alert("참가 실패 : 최대 참가자 수를 초과하였습니다.");
+                        break;
+                    default:
+                        alert("알 수 없는 오류 발생");
+                        break;
+                }
 
-        $("#participants").text(totalParticipants);
+            }
+        });
+    }
+
+    function cancelParticipate() {
+        var boardNo = boardInfo.no;
+        var userNo = ${sessionScope.user.no};
+
+        $.ajax({
+            url : getContextPath() + "/board/cancelParticipate",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8;",
+            method : "POST",
+            data : { boardNo : boardNo,
+                     userNo : userNo },
+            dataType : "json",
+            success : function(data, status, xhr) {
+                getDetail();
+            },
+            error : function(data, status, xhr) {
+                var errorCode = JSON.parse(data.responseText).ErrorCode;
+
+                switch ( errorCode ) {
+                    case 690:
+                        alert("참가 취소 실패 : 번개모임에 참여하지 않았습니다.");
+                        break;
+                    default:
+                        alert("알 수 없는 오류 발생");
+                        break;
+                }
+
+            }
+        });
     }
 
     getDetail();

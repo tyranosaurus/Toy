@@ -10,13 +10,20 @@
         <element id="directory" name="lib">
           <element id="library" level="project" name="Spring-4.3.18.RELEASE" />
           <element id="library" level="project" name="Spring MVC-4.3.18.RELEASE" />
-          <element id="library" level="project" name="mariadb-java-client-2.3.0" />
           <element id="library" level="project" name="Maven: org.mockito:mockito-all:1.10.19" />
           <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.6" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.6" />
           <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.1.0" />
+          <element id="library" level="project" name="Maven: org.aspectj:aspectjrt:1.7.3" />
+          <element id="library" level="project" name="Maven: org.aspectj:aspectjweaver:1.7.3" />
+          <element id="library" level="project" name="Maven: org.aspectj:aspectjtools:1.7.3" />
+          <element id="library" level="project" name="Maven: com.bluecatcode.guava:guava-19.0-extended:1.1.0" />
+          <element id="library" level="project" name="Maven: com.google.code.findbugs:jsr305:3.0.1" />
+          <element id="library" level="project" name="Maven: com.google.guava:guava:19.0" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.18" />
+          <element id="library" level="project" name="mariadb-java-client-2.3.0" />
         </element>
       </element>
     </root>

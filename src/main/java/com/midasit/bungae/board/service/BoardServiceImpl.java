@@ -9,11 +9,13 @@ import com.midasit.bungae.user.dto.User;
 import com.midasit.bungae.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class BoardServiceImpl implements BoardService {
     private static final int MAX_BOARD_COUNT = 5;
 
@@ -29,11 +31,13 @@ public class BoardServiceImpl implements BoardService {
     public BoardServiceImpl() { }
 
     @Override
+    @Transactional(readOnly = true)
     public Board get(int no) {
         return boardRepository.get(no);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Board> getAll() {
         return boardRepository.getAll();
     }
@@ -58,6 +62,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getCount() {
         return boardRepository.getCount();
     }
@@ -123,11 +128,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getParticipantCount(int boardNo) {
         return boardUserRepository.getParticipantCount(boardNo);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> getParticipants(int boardNo) {
         List<User> participants = new ArrayList<>();
         List<Integer> participantNoList = boardUserRepository.getParticipantNoList(boardNo);

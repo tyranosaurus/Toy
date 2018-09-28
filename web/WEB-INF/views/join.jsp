@@ -29,42 +29,13 @@
         var email = $('input[name=email]').val();
         var gender = $('input[name=gender]:checked').val();
 
-        if ( id.length < 1 ) {
-            alert("아이디를 입력해 주세요.");
-            return;
-        }
-
-        if ( password.length < 1 ) {
-            alert("패스워드를 입력해 주세요.");
-            return;
-        }
-
-        if ( password2.length < 1 ) {
-            alert("확인용 패스워드를 입력해 주세요.");
-            return;
-        }
-
-        if ( name.length < 1 ) {
-            alert("이름을 입력해 주세요.");
-            return;
-        }
-
-        if ( email.length < 1 ) {
-            alert("이메일을 입력해 주세요.");
-            return;
-        }
-
-        if ( password != password2 ) {
-            alert("비밀번호가 일치하지 않습니다. 비밀번호를 확인해 주세요.");
-            return;
-        }
-
         $.ajax({
             url : getContextPath() + "/login/doJoin",
             contentType: "application/json; charset=utf-8;",
             method : "POST",
             data : JSON.stringify({ id : id,
                                     password : password,
+                                    password2 : password2,
                                     name : name,
                                     email : email,
                                     gender : gender}),
@@ -75,10 +46,14 @@
             },
             error : function(data, status, xhr) {
                 var errorCode = JSON.parse(data.responseText).ErrorCode;
+                var errorMessage = JSON.parse(data.responseText).ErrorMessage;
 
                 switch ( errorCode ) {
                     case 660:
                         alert("가입 실패 : 이미 사용중인 아이디 입니다.");
+                        break;
+                    case 665:
+                        alert("가입 실패 : " + errorMessage);
                         break;
                     default:
                         alert("알 수 없는 오류 발생");

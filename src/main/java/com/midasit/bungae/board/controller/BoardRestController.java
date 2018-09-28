@@ -6,7 +6,6 @@ import com.midasit.bungae.boarddetail.dto.BoardDetail;
 import com.midasit.bungae.boarddetail.service.BoardDetailService;
 import com.midasit.bungae.errorcode.ServerErrorCode;
 import com.midasit.bungae.exception.*;
-import com.midasit.bungae.user.Gender;
 import com.midasit.bungae.user.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

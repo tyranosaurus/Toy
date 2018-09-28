@@ -2,6 +2,7 @@ package com.midasit.bungae.login.controller;
 
 import com.midasit.bungae.errorcode.ServerErrorCode;
 import com.midasit.bungae.exception.AlreadyJoinUserException;
+import com.midasit.bungae.exception.EmptyValueOfUserJoinException;
 import com.midasit.bungae.exception.HasNoUserException;
 import com.midasit.bungae.login.service.LoginService;
 import com.midasit.bungae.user.dto.User;
@@ -51,14 +52,18 @@ public class LoginRestController {
     }
 
     @PostMapping(path = "/doJoin")
-    public Map<String, Integer> doJoin(@RequestBody User user,
+    public Map<String, Object> doJoin(@RequestBody User user,
                                        HttpServletResponse response,
                                        HttpServletRequest request) {
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         try {
             loginService.join(user);
             response.addHeader("redirect", request.getContextPath() + "/login/loginForm");
+        } catch(EmptyValueOfUserJoinException e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            map.put("ErrorCode", ServerErrorCode.EmptyValueOfUserJoin.getValue());
+            map.put("ErrorMessage", e.getMessage());
         } catch (AlreadyJoinUserException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             map.put("ErrorCode", ServerErrorCode.DUPLICATION_USER_ID.getValue());

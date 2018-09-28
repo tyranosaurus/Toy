@@ -28,11 +28,11 @@
     </bean>
 
     <!-- Interceptors -->
-    <mvc:interceptors>
+    <!--<mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/board/**"/>
             <bean class="com.midasit.bungae.interceptor.AuthInterceptor" />
         </mvc:interceptor>
-    </mvc:interceptors>
+    </mvc:interceptors>-->
 
 </beans>

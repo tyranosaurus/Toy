@@ -24,6 +24,16 @@
           <element id="library" level="project" name="Maven: com.google.guava:guava:19.0" />
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.18" />
           <element id="library" level="project" name="mariadb-java-client-2.3.0" />
+          <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-config:4.2.8.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:4.2.8.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-web:4.2.8.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.3.19.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.3.19.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-context:4.3.19.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-core:4.3.19.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-expression:4.3.19.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-web:4.3.19.RELEASE" />
         </element>
       </element>
     </root>

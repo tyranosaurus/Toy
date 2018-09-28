@@ -27,7 +27,9 @@
         var password =$('input[name=password]').val();
 
         $.ajax({
-            url : getContextPath() + "/login/doLogin",
+            /** http://helols.tistory.com/293 ajax 리다이렉트 참고 */
+            //url : getContextPath() + "/login/doLogin",
+            url : getContextPath() + "/login",
             contentType: "application/x-www-form-urlencoded; charset=utf-8;",
             method : "POST",
             data : { id : id,

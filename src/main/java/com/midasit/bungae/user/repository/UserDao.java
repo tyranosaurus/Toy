@@ -60,6 +60,15 @@ public class UserDao implements UserRepository {
     }
 
     @Override
+    public String getAuthority(String id) {
+        String sql = "select authority from user_authority where user_name = ?";
+
+        return this.jdbcTemplate.queryForObject(sql,
+                                                new Object[] { id },
+                                                String.class);
+    }
+
+    @Override
     public int hasUser(String id, String password) {
         String sql = "select exists (select * " +
                                      "from user " +

@@ -9,10 +9,17 @@ import com.midasit.bungae.user.dto.User;
 import com.midasit.bungae.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +31,8 @@ public class LoginRestController {
     LoginService loginService;
     @Autowired
     UserService userService;
+    @Autowired
+    AuthenticationManager authenticationManager;
 
     @ModelAttribute("user")
     public User createLoginUserObject() {
@@ -33,13 +42,19 @@ public class LoginRestController {
     @PostMapping(path = "/doLogin")
     public Map<String, Integer> doLogin(@ModelAttribute("user") User user,
                                         HttpServletResponse response,
-                                        HttpServletRequest request) {
+                                        HttpServletRequest request,
+                                        HttpSession httpSession) {
         Map<String, Integer> map = new HashMap<>();
 
         try {
             loginService.checkLogin(user.getId(), user.getPassword());
             loginService.bindLoginUserInfo(user, userService.getById(user.getId()));
 
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
+            Authentication auth = authenticationManager.authenticate(token);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+
+            httpSession.setAttribute("SECURITY_CONTEXT", SecurityContextHolder.getContext());
             response.addHeader("redirect", request.getContextPath() + "/board/main");
         } catch (HasNoUserException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

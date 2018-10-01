@@ -1,8 +1,15 @@
 package com.midasit.bungae.user.dto;
 
 import com.midasit.bungae.user.Gender;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-public class User {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+public class User implements UserDetails {
     private int no;
     private String id;
     private String password;
@@ -10,6 +17,7 @@ public class User {
     private String name;
     private String email;
     private Gender gender;
+    private String authority;
 
     public User() { }
 
@@ -78,16 +86,61 @@ public class User {
         this.gender = gender;
     }
 
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if ( this.authority == null ) {
+            return null;
+        }
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(this.authority));
+
+        return authorities;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "no=" + no +
                 ", id='" + id + '\'' +
                 ", password='" + password + '\'' +
-                ", password2='" + password2 + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", gender=" + gender +
+                ", authority=" + authority +
                 '}';
     }
 }

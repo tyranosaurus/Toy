@@ -31,8 +31,8 @@ public class LoginServiceImpl implements LoginService {
         user.setName(loginUserInfo.getName());
         user.setEmail(loginUserInfo.getEmail());
         user.setGender(loginUserInfo.getGender());
-
-        user.setPassword(null);
+        user.setAuthority(userRepository.getAuthority(loginUserInfo.getId()));
+        user.setPassword(loginUserInfo.getPassword());
     }
 
     @Override

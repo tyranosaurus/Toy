@@ -8,28 +8,26 @@
                                  http://www.springframework.org/schema/security/spring-security.xsd">
 
     <http auto-config="true">
-        <!-- CSRF -->
+        <!-- CSRF 설정 -->
         <csrf disabled="true"/>
-
-        <intercept-url pattern="/board/**" access="hasRole('ROLE_USER')" /> <!-- hasAnyRole(ROLE_USER, ROLE_ADMIN) -->
-        <intercept-url pattern="/login/loginForm" access="hasRole('ROLE_ANONYMOUS')" />
-        <!--<intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>-->
-
+        <!-- URL 권한 설정 -->
+        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/board/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" />
+        <intercept-url pattern="/login/**" access="permitAll()" />
+        <!-- 로그인 -->
         <form-login
             username-parameter="id"
             password-parameter="password"
             login-page="/login/loginForm"
             default-target-url="/board/main"
-            authentication-failure-url="/login/loginForm?fail=true" />
+            authentication-failure-url="/login/loginForm?fail=true"/>
+        <!-- 로그아웃 -->
+        <logout logout-success-url="/login/logout" />
     </http>
 
-    <authentication-manager>
-        <authentication-provider>
-            <user-service>
-                <user name="admin" password="1234" authorities="ROLE_ADMIN"/>
-                <user name="cyj0619" password="1234" authorities="ROLE_USER"/>
-            </user-service>
-        </authentication-provider>
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="userAuthenticationProvider" />
+        <authentication-provider user-service-ref="securityUserDetailServiceImpl" />
     </authentication-manager>
 
 </beans:beans>

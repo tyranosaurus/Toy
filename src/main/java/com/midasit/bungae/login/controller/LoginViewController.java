@@ -1,5 +1,6 @@
 package com.midasit.bungae.login.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ public class LoginViewController {
 
     @GetMapping(path = "/logout")
     public String doLogout(HttpSession httpSession) {
+        SecurityContextHolder.clearContext();
         httpSession.invalidate();
 
         return "login";

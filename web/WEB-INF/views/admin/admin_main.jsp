@@ -14,7 +14,7 @@
     <title>썬더볼트</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js" ></script>
 </head>
-<body>
+<bㄱ>
 <script type="text/javascript">
     function getContextPath() {
         var hostIndex = location.href.indexOf( location.host ) + location.host.length;
@@ -103,7 +103,7 @@
 
     getList();
 </script>
-    <h1 align="center">일반 회원 페이지</h1>
+    <h1 align="center">관리자 전용 페이지</h1>
 
     </br>
 
@@ -136,7 +136,7 @@
 
     <div align="center">
         <form action="${pageContext.request.contextPath}/board/createForm" method="get" style="height:40px; width:150px">
-            <button type="submit">새 번개 등록</button>
+            <button type="submit">공지사항 등록</button>
         </form>
     </div>
 </body>

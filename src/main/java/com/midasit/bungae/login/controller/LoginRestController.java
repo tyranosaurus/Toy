@@ -55,7 +55,12 @@ public class LoginRestController {
             SecurityContextHolder.getContext().setAuthentication(auth);
 
             httpSession.setAttribute("SECURITY_CONTEXT", SecurityContextHolder.getContext());
-            response.addHeader("redirect", request.getContextPath() + "/board/main");
+
+            if ( user.getAuthority().equals("ROLE_USER") ) {
+                response.addHeader("redirect", request.getContextPath() + "/board/main");
+            } else {
+                response.addHeader("redirect", request.getContextPath() + "/admin/main");
+            }
         } catch (HasNoUserException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.addHeader("redirect", request.getContextPath() + "/login/joinForm");

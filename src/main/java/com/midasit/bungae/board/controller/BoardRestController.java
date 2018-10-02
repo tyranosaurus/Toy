@@ -74,7 +74,12 @@ public class BoardRestController {
 
         try {
             boardService.modify(board.getNo(), board.getTitle(), null, board.getContent(), board.getMaxParticipantCount(), board.getPassword(), user.getNo());
-            response.addHeader("redirect", request.getContextPath() + "/board/main");
+
+            if ( user.getAuthority().equals("ROLE_USER") ) {
+                response.addHeader("redirect", request.getContextPath() + "/board/main");
+            } else {
+                response.addHeader("redirect", request.getContextPath() + "/admin/main");
+            }
         } catch (NotEqualWriterException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             map.put("ErrorCode", ServerErrorCode.NOT_EQUAL_WRITER.getValue());

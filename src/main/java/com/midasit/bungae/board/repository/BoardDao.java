@@ -1,5 +1,6 @@
 package com.midasit.bungae.board.repository;
 
+import com.midasit.bungae.admin.board.dto.Notice;
 import com.midasit.bungae.user.Gender;
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.user.dto.User;
@@ -127,20 +128,37 @@ public class BoardDao implements BoardRepository {
     @Override
     public void update(int boardNo, String title, String image, String content, int maxParticipantCount, String password) {
         String sql = "update board " +
+                "set title = ?, " +
+                "image = ?, " +
+                "content = ?, " +
+                "max_user_count = ? " +
+                "where no = ? " +
+                "and password = ?";
+
+        this.jdbcTemplate.update(sql,
+                title,
+                image,
+                content,
+                maxParticipantCount,
+                boardNo,
+                password);
+    }
+
+    @Override
+    public void update(int boardNo, String title, String image, String content, int maxParticipantCount) {
+        String sql = "update board " +
                      "set title = ?, " +
                          "image = ?, " +
                          "content = ?, " +
                          "max_user_count = ? " +
-                     "where no = ? " +
-                            "and password = ?";
+                     "where no = ? ";
 
         this.jdbcTemplate.update(sql,
                                  title,
                                  image,
                                  content,
                                  maxParticipantCount,
-                                 boardNo,
-                                 password);
+                                 boardNo);
     }
 
     @Override

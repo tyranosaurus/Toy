@@ -36,13 +36,13 @@
 
     function getDetail() {
         $.ajax({
-            url : getContextPath() + "/board/detail",
+            url : getContextPath() + "/admin/detail",
             contentType: "application/x-www-form-urlencoded; charset=utf-8;",
-            data : { boardNo : ${boardNo} },
+            data : { noticeNo : ${noticeNo} },
             method : "GET",
             dataType : "json",
             success : function(data, status, xhr) {
-                renderModify(data["boardDetail"]);
+                renderModify(data["notice"]);
             },
             error : function(xhr) {
                 alert("게시판 상세 정보를 불러오는데 실패 하였습니다.");
@@ -50,17 +50,16 @@
         });
     }
 
-    function renderModify(boardDetail) {
-        $("#boardDetail").empty();
+    function renderModify(notice) {
+        $("#noticeDetail").empty();
 
         var html = '<tr>' +
-        '<td>타이틀 : <input type="text" name="title" value="' + boardDetail.board.title + '"/>' +
-            '</td>' +
-            '<td>작성자 : ' + boardDetail.board.writer.id + '</td>' +
+            '<td>타이틀 : <input type="text" name="title" value="' + notice.title + '"/>' +
+            '<td>작성자 : ' + notice.writer.id + '</td>' +
             '</tr>' +
             '<tr>' +
             '<td colspan="2">' +
-            '<img src="">' +
+            '<input type="image" src=""/>' +
             '</td>' +
             '</tr>' +
             '<tr>' +
@@ -68,36 +67,31 @@
             '</tr>' +
             '<tr align="center">' +
             '<td colspan="2">' +
-            '<textarea style="height: 100px; width: 100%;" name="content">' + boardDetail.board.content + '</textarea>' +
+            '<textarea style="height: 100px; width: 100%;" name="content">' + notice.content + '</textarea>' +
             '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td>최대 참가자 수</td>' +
-            '<td><input type="text" name="maxParticipantCount" value="' + boardDetail.board.maxParticipantCount + '" /></td>' +
             '</tr>' +
             '<tr>' +
             '<td>게시글 비밀번호</td>' +
             '<td><input type="text" name="password"/></td>' +
             '</tr>';
 
-        $("#boardDetail").append(html);
+        $("#noticeDetail").append(html);
     }
 
+    /** ************************************************************************************************************************************************************/
     function modify() {
-        var boardNo = ${boardNo};
+        var noticeNo = ${noticeNo};
         var title =$('input[name=title]').val();
         var content = $('textarea[name=content]').val();
-        var maxParticipantCount = Number($('input[name=maxParticipantCount]').val());
         var password = $('input[name=password]').val();
 
         $.ajax({
-            url : getContextPath() + "/board/modify",
+            url : getContextPath() + "/admin/modify",
             contentType: "application/json; charset=utf-8;",
             method : "POST",
-            data : JSON.stringify({ no : boardNo,
+            data : JSON.stringify({ no : noticeNo,
                                     title : title,
                                     content : content,
-                                    maxParticipantCount : maxParticipantCount,
                                     password : password }),
             dataType : "json",
             success : function(data, status, xhr) {
@@ -108,10 +102,10 @@
 
                 switch ( errorCode ) {
                     case 610:
-                        alert("수정 실패 : 게시판 작성자가 일치하지 않습니다.");
+                        alert("수정 실패 : 공지사항 작성자가 일치하지 않습니다.");
                         break;
                     case 620:
-                        alert("수정 실패 : 게시판 비밀번호가 일치하지 않습니다.");
+                        alert("수정 실패 : 공지사항 비밀번호가 일치하지 않습니다.");
                         break;
                     default:
                         alert("알 수 없는 오류 발생");
@@ -121,26 +115,26 @@
             }
         });
     }
+    /** ************************************************************************************************************************************************************/
 
     getDetail();
 </script>
 
-    <input	type="hidden" name="boardNo" value="${boardNo}">
+    <input	type="hidden" name="boardNo" value="${noticeNo}">
 
     <table border="1" width="500" align="center">
         <thead>
         <tr>
-            <th colspan="2" height="50">번개 수정</th>
+            <th colspan="2" height="50">공지사항 수정</th>
         </tr>
         </thead>
-        <tbody id="boardDetail"></tbody>
+        <tbody id="noticeDetail"></tbody>
     </table>
 
     </br>
 
     <div align="center">
         <button id="modifyBoard" type="submit" onclick="modify()">수정하기</button>
-
         <c:set var="authority" value="${sessionScope.user.authority}" />
         <c:choose>
             <c:when test="${authority eq 'ROLE_ADMIN'}">

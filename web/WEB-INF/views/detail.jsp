@@ -13,10 +13,23 @@
 <head>
     <title>썬더볼트</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js" ></script>
+    <meta name="_csrf_parameter" content="${_csrf.parameterName}" />
+    <meta name="_csrf_header" content="${_csrf.headerName}" />
+    <meta name="_csrf" content="${_csrf.token}" />
 </head>
 <body>
 <script type="text/javascript">
     var boardInfo;
+
+    $(function () {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function(e, xhr, options) {
+            if(token && header) {
+                xhr.setRequestHeader(header, token);
+            }
+        });
+    });
 
     function getContextPath() {
         var hostIndex = location.href.indexOf( location.host ) + location.host.length;
@@ -168,9 +181,19 @@
 
     </br>
 
-    <form action="${pageContext.request.contextPath}/board/main" method="GET" align="center">
-        <button type="submit">돌아가기</button>
-    </form>
+    <c:set var="authority" value="${sessionScope.user.authority}" />
+    <c:choose>
+        <c:when test="${authority eq 'ROLE_ADMIN'}">
+            <form action="${pageContext.request.contextPath}/admin/main" method="GET" align="center">
+                <button type="submit">돌아가기</button>
+            </form>
+        </c:when>
+        <c:otherwise>
+            <form action="${pageContext.request.contextPath}/board/main" method="GET" align="center">
+                <button type="submit">돌아가기</button>
+            </form>
+        </c:otherwise>
+    </c:choose>
 </body>
 </html>
 

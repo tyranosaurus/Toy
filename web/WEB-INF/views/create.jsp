@@ -13,9 +13,22 @@
 <head>
     <title>썬더볼트</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js" ></script>
+    <meta name="_csrf_parameter" content="${_csrf.parameterName}" />
+    <meta name="_csrf_header" content="${_csrf.headerName}" />
+    <meta name="_csrf" content="${_csrf.token}" />
 </head>
 <body>
 <script type="text/javascript">
+    $(function () {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function(e, xhr, options) {
+            if(token && header) {
+                xhr.setRequestHeader(header, token);
+            }
+        });
+    });
+
     function getContextPath() {
         var hostIndex = location.href.indexOf( location.host ) + location.host.length;
         return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );

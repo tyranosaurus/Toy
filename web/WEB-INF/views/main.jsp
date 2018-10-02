@@ -13,9 +13,22 @@
 <head>
     <title>썬더볼트</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js" ></script>
+    <meta name="_csrf_parameter" content="${_csrf.parameterName}" />
+    <meta name="_csrf_header" content="${_csrf.headerName}" />
+    <meta name="_csrf" content="${_csrf.token}" />
 </head>
 <body>
 <script type="text/javascript">
+   $(function () {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function(e, xhr, options) {
+            if(token && header) {
+                xhr.setRequestHeader(header, token);
+            }
+        });
+    });
+
     function getContextPath() {
         var hostIndex = location.href.indexOf( location.host ) + location.host.length;
         return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
@@ -39,7 +52,7 @@
             data : { boardNo : boardNo, password : password },
             dataType : "json",
             success : function(data, status, xhr) {
-                getList();
+                getNotices();
             },
             error : function(data, status, xhr) {
                 var errorCode = JSON.parse(data.responseText).ErrorCode;
@@ -60,6 +73,41 @@
         });
     }
 
+    function getNotices() {
+        $.ajax({
+            url : getContextPath() + "/admin/notices",
+            contentType: 'application/json; charset=utf-8;',
+            method : "GET",
+            dataType : "json",
+            success : function(data, status, xhr) {
+                renderNotices(data["notices"]);
+                getList();
+            },
+            error : function(xhr) {
+                alert("공지사항을 불러오는데 실패 하였습니다.");
+            }
+        });
+    }
+
+    function renderNotices(notices) {
+        $("#boards").empty();
+
+        for ( var i in notices ) {
+            var html =
+                '<tr height="35" align="center">' +
+                '<td>공지사항</td>' +
+                '<td>' +
+                '<a href="' + getContextPath() + '/admin/detailForm/' + notices[i].no + '" >' + notices[i].title + '</a>' +
+                '</td>' +
+                '<td>' + notices[i].writer.id + '</td>' +
+                '<td></td>' +
+                '<td></td>' +
+                '</tr>';
+
+            $("#boards").append(html);
+        }
+    }
+
     function getList() {
         $.ajax({
             url : getContextPath() + "/board/list",
@@ -76,8 +124,6 @@
     }
 
     function renderBoards(boards) {
-        $("#boards").empty();
-
         for ( var i in boards ) {
             var indexNo = Number(i) + 1;
             var html =
@@ -101,7 +147,7 @@
         }
     }
 
-    getList();
+    getNotices();
 </script>
     <h1 align="center">일반 회원 페이지</h1>
 

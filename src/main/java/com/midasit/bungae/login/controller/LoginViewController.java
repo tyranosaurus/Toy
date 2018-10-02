@@ -20,7 +20,7 @@ public class LoginViewController {
         SecurityContextHolder.clearContext();
         httpSession.invalidate();
 
-        return "login";
+        return "redirect:/login/loginForm";
     }
 
     @GetMapping(path = "/joinForm")

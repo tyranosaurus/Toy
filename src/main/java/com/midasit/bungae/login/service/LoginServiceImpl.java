@@ -40,7 +40,9 @@ public class LoginServiceImpl implements LoginService {
         checkEmptyValue(user);
 
         if ( !userRepository.hasId(user.getId()) ) {
-            userRepository.create(user);
+            int userNo = userRepository.create(user);
+            user.setNo(userNo);
+            userRepository.createAuthority(user);
         } else {
             throw new AlreadyJoinUserException("이미 가입된 유저입니다.");
         }

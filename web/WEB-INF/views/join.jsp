@@ -13,9 +13,22 @@
 <head>
     <title>썬더볼트</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js" ></script>
+    <meta name="_csrf_parameter" content="${_csrf.parameterName}" />
+    <meta name="_csrf_header" content="${_csrf.headerName}" />
+    <meta name="_csrf" content="${_csrf.token}" />
 </head>
 <body>
 <script type="text/javascript">
+    $(function () {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function(e, xhr, options) {
+            if(token && header) {
+                xhr.setRequestHeader(header, token);
+            }
+        });
+    });
+
     function getContextPath() {
         var hostIndex = location.href.indexOf( location.host ) + location.host.length;
         return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
@@ -28,6 +41,7 @@
         var name = $('input[name=name]').val();
         var email = $('input[name=email]').val();
         var gender = $('input[name=gender]:checked').val();
+        var authority = $('input[name=authority]:checked').val();
 
         $.ajax({
             url : getContextPath() + "/login/doJoin",
@@ -38,7 +52,8 @@
                                     password2 : password2,
                                     name : name,
                                     email : email,
-                                    gender : gender}),
+                                    gender : gender,
+                                    authority : authority }),
             dataType : "json",
             success : function(data, status, xhr) {
                 alert("회원가입을 축하합니다! 로그인 페이지로 이동합니다.")
@@ -97,10 +112,17 @@
             </td>
         </tr>
         <tr>
-            <td height="50" width="80" align="center">남여 : </td>
+            <td height="50" width="80" align="center">남/여 : </td>
             <td height="50" align="center">
                 <input type="radio" name="gender" value="0" checked="checked">남자
                 <input type="radio" name="gender" value="1">여자
+            </td>
+        </tr>
+        <tr>
+            <td height="50" width="80" align="center">권한 : </td>
+            <td height="50" align="center">
+                <input type="radio" name="authority" value="ROLE_ADMIN">관리자
+                <input type="radio" name="authority" value="ROLE_USER" checked="checked">일반
             </td>
         </tr>
 

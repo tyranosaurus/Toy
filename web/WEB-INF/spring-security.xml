@@ -8,9 +8,10 @@
                                  http://www.springframework.org/schema/security/spring-security.xsd">
 
     <http auto-config="true">
-        <!-- CSRF 설정 -->
-        <csrf disabled="true"/>
         <!-- URL 권한 설정 -->
+        <intercept-url pattern="/admin/notices" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" />
+        <intercept-url pattern="/admin/detailForm/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" />
+        <intercept-url pattern="/admin/detail/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" />
         <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
         <intercept-url pattern="/board/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" />
         <intercept-url pattern="/login/**" access="permitAll()" />
@@ -20,9 +21,11 @@
             password-parameter="password"
             login-page="/login/loginForm"
             default-target-url="/board/main"
-            authentication-failure-url="/login/loginForm?fail=true"/>
+            authentication-failure-url="/login/loginForm?fail=true" />
         <!-- 로그아웃 -->
-        <logout logout-success-url="/login/logout" />
+        <logout
+                logout-success-url="/login/logout"
+                invalidate-session="true"/>
     </http>
 
     <authentication-manager alias="authenticationManager">

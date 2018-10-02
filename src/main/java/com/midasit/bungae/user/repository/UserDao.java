@@ -69,6 +69,15 @@ public class UserDao implements UserRepository {
     }
 
     @Override
+    public String getAuthority(int no) {
+        String sql = "select authority from user_authority where user_no = ?";
+
+        return this.jdbcTemplate.queryForObject(sql,
+                                                new Object[] { no },
+                                                String.class);
+    }
+
+    @Override
     public int hasUser(String id, String password) {
         String sql = "select exists (select * " +
                                      "from user " +
@@ -108,6 +117,28 @@ public class UserDao implements UserRepository {
                 ps.setString(3, user.getName());
                 ps.setString(4, user.getEmail());
                 ps.setInt(5, user.getGender().getValue());
+
+                return ps;
+            }
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
+    }
+
+    @Override
+    public int createAuthority(User user) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        this.jdbcTemplate.update(new PreparedStatementCreator() {
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                String sql = "insert into user_authority(no, user_name, password, enabled, authority, user_no) " +
+                             "values(null, ?, ?, 1, ?, ?);";
+
+                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, user.getId());
+                ps.setString(2, user.getPassword());
+                ps.setString(3, user.getAuthority());
+                ps.setInt(4, user.getNo());
 
                 return ps;
             }

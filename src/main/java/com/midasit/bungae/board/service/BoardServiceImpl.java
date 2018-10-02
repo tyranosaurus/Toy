@@ -1,10 +1,12 @@
 package com.midasit.bungae.board.service;
 
+import com.midasit.bungae.admin.board.dto.Notice;
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.board.repository.BoardRepository;
 import com.midasit.bungae.boarddetail.repository.BoardDetailRepository;
 import com.midasit.bungae.boarduser.repository.BoardUserRepository;
 import com.midasit.bungae.exception.*;
+import com.midasit.bungae.notice.repository.NoticeRepository;
 import com.midasit.bungae.user.dto.User;
 import com.midasit.bungae.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ public class BoardServiceImpl implements BoardService {
     UserRepository userRepository;
     @Autowired
     BoardDetailRepository boardDetailRepository;
+    @Autowired
+    NoticeRepository noticeRepository;
 
     public BoardServiceImpl() { }
 
@@ -40,6 +44,17 @@ public class BoardServiceImpl implements BoardService {
     @Transactional(readOnly = true)
     public List<Board> getAll() {
         return boardRepository.getAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Notice> getNotices() {
+        return noticeRepository.getAll();
+    }
+
+    @Override
+    public Notice getNotice(int noticeNo) {
+        return noticeRepository.get(noticeNo);
     }
 
     @Override
@@ -62,15 +77,26 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public int createNotice(Notice notice) {
+        if ( notice.getTitle() == null || notice.getTitle().length() < 1
+                || notice.getPassword() == null || notice.getPassword().length() < 1
+                || notice.getContent() == null || notice.getContent().length() < 1 ) {
+            throw new EmptyValueOfNoticeCreationException("값이 없는 정보가 있습니다. 모든 칸을 채워주세요.");
+        }
+
+        return noticeRepository.add(notice);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public int getCount() {
         return boardRepository.getCount();
     }
 
     @Override
-    public boolean isEqualWriter(int boardNo, int writerNo) {
+    public boolean isEqualWriter(int boardNo, int userNo) {
         Board board = boardRepository.get(boardNo);
-        User writer = userRepository.get(writerNo);
+        User writer = userRepository.get(userNo);
 
         if ( board.getWriter().getNo() == writer.getNo() ) {
             return true;
@@ -91,8 +117,14 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void modify(int boardNo, String title, String image, String content, int maxParticipantCount, String password, int writerNo) {
-        if ( isEqualWriter(boardNo, writerNo) ) {
+    public void modify(int boardNo, String title, String image, String content, int maxParticipantCount, String password, int userNo) {
+        if ( userRepository.getAuthority(userNo).equals("ROLE_ADMIN") ) {
+            boardRepository.update(boardNo, title, null, content, maxParticipantCount);
+
+            return;
+        }
+
+        if ( isEqualWriter(boardNo, userNo) ) {
             if ( isEqualPassword(boardNo, password) ) {
                 boardRepository.update(boardNo, title, null, content, maxParticipantCount, password);
             } else {
@@ -104,8 +136,42 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void delete(int boardNo, String password, int writerNo) {
-        if ( isEqualWriter(boardNo, writerNo) ) {
+    public void modifyNotice(int noticeNo, String title, String image, String content, String password, int writerNo) {
+        if ( isEqualWriterAtNotice(noticeNo, writerNo) ) {
+            if ( isEqualPasswordAtNotice(noticeNo, password) ) {
+                noticeRepository.update(noticeNo, title, null, content, password);
+            } else {
+                throw new NotEqualPasswordException("공지사항의 비밀번호가 일치하지 않습니다.");
+            }
+        } else {
+            throw new NotEqualWriterException("작성자가 일치하지 않습니다.");
+        }
+    }
+
+    private boolean isEqualWriterAtNotice(int noticeNo, int writerNo) {
+        Notice notice = noticeRepository.get(noticeNo);
+        User writer = userRepository.get(writerNo);
+
+        if ( notice.getWriter().getNo() == writer.getNo() ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isEqualPasswordAtNotice(int noticeNo, String password) {
+        Notice notice = noticeRepository.get(noticeNo);
+
+        if ( notice.getPassword().equals(password) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void delete(int boardNo, String password, int userNo) {
+        if ( isEqualWriter(boardNo, userNo) ) {
             if ( isEqualPassword(boardNo, password) ) {
                 // board_user 테이블 삭제
                 boardUserRepository.deleteBoard(boardNo);
@@ -125,6 +191,31 @@ public class BoardServiceImpl implements BoardService {
         boardUserRepository.deleteAll();
         // board 테이블 삭제
         boardRepository.deleteAll();
+    }
+
+    @Override
+    public void deleteNotice(Integer noticeNo, String password, int writerNo) {
+        if ( isEqualWriterAtNotice(noticeNo, writerNo) ) {
+            if ( isEqualPasswordAtNotice(noticeNo, password) ) {
+                noticeRepository.delete(noticeNo);
+            } else {
+                throw new NotEqualPasswordException("게시판의 비밀번호가 일치하지 않습니다.");
+            }
+        } else {
+            throw new NotEqualWriterException("작성자가 일치하지 않습니다.");
+        }
+    }
+
+    @Override
+    public void deleteByAdmin(Integer boardNo, String authority) {
+        if ( authority.equals("ROLE_ADMIN") ) {
+            boardUserRepository.deleteBoard(boardNo);
+            boardRepository.delete(boardNo);
+
+            return;
+        }
+
+        throw new NotAdminAccountException();
     }
 
     @Override

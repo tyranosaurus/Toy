@@ -105,6 +105,7 @@
             },
             error : function(data, status, xhr) {
                 var errorCode = JSON.parse(data.responseText).ErrorCode;
+                var errorMessage = JSON.parse(data.responseText).ErrorMessage;
 
                 switch ( errorCode ) {
                     case 610:
@@ -112,6 +113,9 @@
                         break;
                     case 620:
                         alert("수정 실패 : 게시판 비밀번호가 일치하지 않습니다.");
+                        break;
+                    case 630:
+                        alert("수정 실패 : " + errorMessage);
                         break;
                     default:
                         alert("알 수 없는 오류 발생");

@@ -2,12 +2,22 @@ package com.midasit.bungae.board.dto;
 
 import com.midasit.bungae.user.dto.User;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class Board {
     private int no;
+    @NotNull
+    @Size(min = 1)
     private String title;
     private String password;
     private String image;
+    @NotNull
+    @Size(min = 1)
     private String content;
+    @NotNull
+    @Min(1)
     private int maxParticipantCount;
     private User writer;
 
@@ -77,5 +87,18 @@ public class Board {
 
     public void setWriter(User writer) {
         this.writer = writer;
+    }
+
+    @Override
+    public String toString() {
+        return "Board{" +
+                "no=" + no +
+                ", title='" + title + '\'' +
+                ", password='" + password + '\'' +
+                ", image='" + image + '\'' +
+                ", content='" + content + '\'' +
+                ", maxParticipantCount=" + maxParticipantCount +
+                ", writer=" + writer +
+                '}';
     }
 }

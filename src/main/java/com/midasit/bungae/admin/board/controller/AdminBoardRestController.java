@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class AdminBoardRestController {
 
     @RequestMapping(path = "/createNotice")
     public Map<String, Integer> create(@RequestBody Notice notice,
-                                       @ModelAttribute User user,
+                                       @ModelAttribute @Valid User user,
                                        HttpServletResponse response,
                                        HttpServletRequest request) {
         Map<String, Integer> map = new HashMap<>();
@@ -54,15 +55,15 @@ public class AdminBoardRestController {
             response.addHeader("redirect", request.getContextPath() + "/admin/main");
         } catch (EmptyValueOfNoticeCreationException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            map.put("ErrorCode", ServerErrorCode.EMPTY_VALUE_OF_NOTICE_CREATION.getValue());
+            map.put("ErrorCode", ServerErrorCode.EMPTY_VALUE_OF_FIELD.getValue());
         }
 
         return map;
     }
 
     @PostMapping(path = "/modify")
-    public Map<String, Integer> modify(@RequestBody Notice notice,
-                                       @ModelAttribute User user,
+    public Map<String, Integer> modify(@RequestBody @Valid Notice notice,
+                                       @ModelAttribute @Valid User user,
                                        HttpServletResponse response,
                                        HttpServletRequest request) {
         Map<String, Integer> map = new HashMap<>();
@@ -84,7 +85,7 @@ public class AdminBoardRestController {
     @PostMapping(path = "/delete")
     public Map<String, Integer> delete(@RequestParam Integer noticeNo,
                                        @RequestParam String password,
-                                       @ModelAttribute User user,
+                                       @ModelAttribute @Valid User user,
                                        HttpServletResponse response) {
         Map<String, Integer> map = new HashMap<>();
 

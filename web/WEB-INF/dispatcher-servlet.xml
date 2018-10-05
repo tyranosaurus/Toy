@@ -27,13 +27,7 @@
         <property name="suffix" value=".jsp" />
     </bean>
 
-    <!-- Spring Security 사용으로 교체 -->
-    <!-- Interceptors -->
-    <!--<mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/board/**"/>
-            <bean class="com.midasit.bungae.interceptor.AuthInterceptor" />
-        </mvc:interceptor>
-    </mvc:interceptors>-->
+    <!-- Validator -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
 </beans>

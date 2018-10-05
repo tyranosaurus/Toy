@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,8 +46,8 @@ public class BoardRestController {
     }
 
     @RequestMapping(path = "/create")
-    public Map<String, Integer> create(@RequestBody Board board,
-                                       @ModelAttribute User user,
+    public Map<String, Integer> create(@RequestBody @Valid Board board,
+                                       @ModelAttribute @Valid User user,
                                        HttpServletResponse response,
                                        HttpServletRequest request) {
         Map<String, Integer> map = new HashMap<>();
@@ -56,7 +57,7 @@ public class BoardRestController {
             response.addHeader("redirect", request.getContextPath() + "/board/main");
         } catch (EmptyValueOfBoardCreationException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            map.put("ErrorCode", ServerErrorCode.EMPTY_VALUE_OF_BOARD_CREATION.getValue());
+            map.put("ErrorCode", ServerErrorCode.EMPTY_VALUE_OF_FIELD.getValue());
         } catch (MaxBoardOverflowException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             map.put("ErrorCode", ServerErrorCode.MAX_BOARD_OVERFLOW.getValue());
@@ -66,8 +67,8 @@ public class BoardRestController {
     }
 
     @PostMapping(path = "/modify")
-    public Map<String, Integer> modify(@RequestBody Board board,
-                                       @ModelAttribute User user,
+    public Map<String, Integer> modify(@RequestBody @Valid Board board,
+                                       @ModelAttribute @Valid User user,
                                        HttpServletResponse response,
                                        HttpServletRequest request) {
         Map<String, Integer> map = new HashMap<>();
@@ -94,7 +95,7 @@ public class BoardRestController {
     @PostMapping(path = "/delete")
     public Map<String, Integer> delete(@RequestParam Integer boardNo,
                                        @RequestParam String password,
-                                       @ModelAttribute User user,
+                                       @ModelAttribute @Valid User user,
                                        HttpServletResponse response) {
         Map<String, Integer> map = new HashMap<>();
 

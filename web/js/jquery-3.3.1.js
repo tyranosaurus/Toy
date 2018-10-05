@@ -8955,7 +8955,7 @@
                 requestHeaders = {},
                 requestHeadersNames = {},
 
-                // Default abort message
+                // Default abort properties
                 strAbort = "canceled",
 
                 // Fake xhr

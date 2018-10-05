@@ -13,13 +13,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,7 +71,7 @@ public class LoginRestController {
     }
 
     @PostMapping(path = "/doJoin")
-    public Map<String, Object> doJoin(@RequestBody User user,
+    public Map<String, Object> doJoin(@RequestBody @Valid User user,
                                        HttpServletResponse response,
                                        HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>();
@@ -82,7 +81,7 @@ public class LoginRestController {
             response.addHeader("redirect", request.getContextPath() + "/login/loginForm");
         } catch(EmptyValueOfUserJoinException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            map.put("ErrorCode", ServerErrorCode.EmptyValueOfUserJoin.getValue());
+            map.put("ErrorCode", ServerErrorCode.EMPTY_VALUE_OF_FIELD.getValue());
             map.put("ErrorMessage", e.getMessage());
         } catch (AlreadyJoinUserException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

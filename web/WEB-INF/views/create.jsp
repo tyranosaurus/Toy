@@ -54,10 +54,11 @@
             },
             error : function(data, status, xhr) {
                 var errorCode = JSON.parse(data.responseText).ErrorCode;
+                var errorMessage = JSON.parse(data.responseText).ErrorMessage;
 
                 switch ( errorCode ) {
                     case 630:
-                        alert("생성 실패 : 빈 칸을 모두 채워주세요.");
+                        alert("가입 실패 : " + errorMessage);
                         break;
                     case 650:
                         alert("생성 실패 : 최대 게시글 수를 초과하였습니다.");
@@ -85,7 +86,7 @@
             </td>
             <td>
                 <%-- 로그인 구현시 로그인 정보를 세션에서 가져옴 --%>
-                작성자 : <input type="text" name="writer"/>
+                작성자 : ${sessionScope.user.id}
             </td>
         </tr>
         <tr>

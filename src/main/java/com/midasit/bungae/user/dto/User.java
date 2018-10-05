@@ -5,18 +5,27 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class User implements UserDetails {
     private int no;
+    @NotNull
+    @Size(min = 1)
     private String id;
     private String password;
     private String password2;
+    @NotNull
+    @Size(min = 1)
     private String name;
+    @NotNull
+    @Size(min = 1)
     private String email;
+    @NotNull
     private Gender gender;
+    @NotNull
     private String authority;
 
     public User() { }

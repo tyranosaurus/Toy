@@ -64,11 +64,11 @@
                 var errorMessage = JSON.parse(data.responseText).ErrorMessage;
 
                 switch ( errorCode ) {
+                    case 630:
+                        alert("가입 실패 : " + errorMessage);
+                        break;
                     case 660:
                         alert("가입 실패 : 이미 사용중인 아이디 입니다.");
-                        break;
-                    case 665:
-                        alert("가입 실패 : " + errorMessage);
                         break;
                     default:
                         alert("알 수 없는 오류 발생");

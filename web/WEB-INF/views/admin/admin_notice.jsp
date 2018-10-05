@@ -52,10 +52,11 @@
             },
             error : function(data, status, xhr) {
                 var errorCode = JSON.parse(data.responseText).ErrorCode;
+                var errorMessage = JSON.parse(data.responseText).ErrorMessage;
 
                 switch ( errorCode ) {
-                    case 635:
-                        alert("생성 실패 : 빈 칸을 모두 채워주세요.");
+                    case 630:
+                        alert("가입 실패 : " + errorMessage);
                         break;
                     default:
                         alert("알 수 없는 오류 발생");
@@ -79,8 +80,7 @@
                 타이틀 : <input type="text" name="title"/>
             </td>
             <td>
-                <%-- 로그인 구현시 로그인 정보를 세션에서 가져옴 --%>
-                작성자 : <input type="text" name="writer"/>
+                작성자 : ${sessionScope.user.id}
             </td>
         </tr>
         <tr>

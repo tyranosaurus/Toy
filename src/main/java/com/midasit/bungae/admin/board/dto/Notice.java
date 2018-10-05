@@ -2,11 +2,18 @@ package com.midasit.bungae.admin.board.dto;
 
 import com.midasit.bungae.user.dto.User;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class Notice {
     private int no;
+    @NotNull
+    @Size(min = 1)
     private String title;
     private String password;
     private String image;
+    @NotNull
+    @Size(min = 1)
     private String content;
     private User writer;
 

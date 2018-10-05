@@ -1,7 +1,10 @@
 package com.midasit.bungae.user.repository;
 
+import com.midasit.bungae.generator.model.UserExample;
+import com.midasit.bungae.generator.repository.UserMapper;
 import com.midasit.bungae.user.Gender;
 import com.midasit.bungae.user.dto.User;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -12,9 +15,15 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.List;
 
 @Repository
 public class UserDao implements UserRepository {
+    @Autowired
+    SqlSession sqlSession;
+
+    UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+
     private JdbcTemplate jdbcTemplate;
 
     private RowMapper<User> userRowMapper = new RowMapper<User>() {
@@ -39,6 +48,16 @@ public class UserDao implements UserRepository {
 
     @Override
     public User get(int userNo) {
+        /*UserExample example = new UserExample();
+        example.createCriteria()
+               .andNoEqualTo(userNo);
+
+        mapper.selectByPrimaryKey(userNo);
+
+        List<User> users = mapper.selectByExample(example);
+
+        return users.get(0);*/
+
         String sql = "select * " +
                      "from user " +
                      "where no = ?";

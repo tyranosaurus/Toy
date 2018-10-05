@@ -59,6 +59,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public int createNew(Board board) {
+        //checkPassword();
         if ( board.getTitle() == null || board.getTitle().length() < 1
                 || board.getPassword() == null || board.getPassword().length() < 1
                 || board.getContent() == null || board.getContent().length() < 1

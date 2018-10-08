@@ -1,8 +1,6 @@
 package com.midasit.bungae.advice;
 
-import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.errorcode.ServerErrorCode;
-import com.midasit.bungae.user.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;

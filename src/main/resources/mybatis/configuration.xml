@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?> <!-- MyBatis 설정 파일 -->
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <!-- Aliase 등록 -->
+    <typeAliases></typeAliases>
 
-    <mappers>
-        <mapper resource="mybatis/mapper/UserMapper.xml" />
-    </mappers>
-
+    <!-- mapper.xml 등록 -->
+    <mappers></mappers>
 </configuration>

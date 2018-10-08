@@ -4,7 +4,6 @@ import com.midasit.bungae.generator.model.UserExample;
 import com.midasit.bungae.generator.repository.UserMapper;
 import com.midasit.bungae.user.Gender;
 import com.midasit.bungae.user.dto.User;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -15,14 +14,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.List;
 
 @Repository
 public class UserDao implements UserRepository {
     @Autowired
-    SqlSession sqlSession;
-
-    UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+    UserMapper mapper;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -48,38 +44,25 @@ public class UserDao implements UserRepository {
 
     @Override
     public User get(int userNo) {
-        /*UserExample example = new UserExample();
-        example.createCriteria()
-               .andNoEqualTo(userNo);
-
-        mapper.selectByPrimaryKey(userNo);
-
-        List<User> users = mapper.selectByExample(example);
-
-        return users.get(0);*/
-
-        String sql = "select * " +
-                     "from user " +
-                     "where no = ?";
-
-        return this.jdbcTemplate.queryForObject(sql,
-                                                new Object[] { userNo },
-                                                this.userRowMapper);
+        return mapper.selectByPrimaryKey(userNo);
     }
 
     @Override
     public User get(String id) {
-        String sql = "select * " +
-                     "from user " +
-                     "where id = ?";
+        UserExample example = new UserExample();
+        example.createCriteria()
+               .andIdEqualTo(id);
 
-        return this.jdbcTemplate.queryForObject(sql,
-                                                new Object[] { id },
-                                                this.userRowMapper);
+        return mapper.selectByExample(example).get(0);
     }
 
     @Override
     public String getAuthority(String id) {
+        UserExample example = new UserExample();
+        example.createCriteria()
+                .andIdEqualTo(id);
+
+
         String sql = "select authority from user_authority where user_name = ?";
 
         return this.jdbcTemplate.queryForObject(sql,
@@ -123,25 +106,9 @@ public class UserDao implements UserRepository {
 
     @Override
     public int create(User user) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        mapper.insert(user);
 
-        this.jdbcTemplate.update(new PreparedStatementCreator() {
-            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                String sql = "insert into user(no, id, password, name, email, gender) " +
-                             "values(null, ?, ?, ?, ?, ?);";
-
-                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, user.getId());
-                ps.setString(2, user.getPassword());
-                ps.setString(3, user.getName());
-                ps.setString(4, user.getEmail());
-                ps.setInt(5, user.getGender().getValue());
-
-                return ps;
-            }
-        }, keyHolder);
-
-        return keyHolder.getKey().intValue();
+        return user.getNo();
     }
 
     @Override

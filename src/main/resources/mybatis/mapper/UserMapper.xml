@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.midasit.bungae.generator.repository.UserMapper">
-  <resultMap id="BaseResultMap" type="com.midasit.bungae.generator.model.User">
+  <resultMap id="BaseResultMap" type="com.midasit.bungae.user.dto.User">
     <id column="no" jdbcType="INTEGER" property="no" />
     <result column="id" jdbcType="VARCHAR" property="id" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="gender" jdbcType="BIT" property="gender" />
+    <result column="gender" jdbcType="BIT" property="gender" typeHandler="com.midasit.bungae.user.GenderTypeHandler"/>
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -100,9 +100,9 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.midasit.bungae.generator.model.User">
+  <insert id="insert" parameterType="com.midasit.bungae.user.dto.User">
     <selectKey keyProperty="no" order="AFTER" resultType="java.lang.Integer">
-      MariaDB
+      SELECT LAST_INSERT_ID()
     </selectKey>
     insert into user (id, password, name, 
       email, gender)
@@ -111,7 +111,7 @@
   </insert>
   <insert id="insertSelective" parameterType="com.midasit.bungae.generator.model.User">
     <selectKey keyProperty="no" order="AFTER" resultType="java.lang.Integer">
-      MariaDB
+      SELECT LAST_INSERT_ID()
     </selectKey>
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">

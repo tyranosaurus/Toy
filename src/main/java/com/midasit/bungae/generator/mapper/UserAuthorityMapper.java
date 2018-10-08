@@ -1,7 +1,8 @@
 package com.midasit.bungae.generator.mapper;
 
-import com.midasit.bungae.generator.model.UserAuthority;
 import com.midasit.bungae.generator.model.UserAuthorityExample;
+import com.midasit.bungae.generator.model.UserAuthority;
+
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

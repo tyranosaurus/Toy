@@ -13,6 +13,18 @@ public class User {
 
     private byte[] gender;
 
+    public User() {
+    }
+
+    public User(Integer no, String id, String password, String name, String email, byte[] gender) {
+        this.no = no;
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+    }
+
     public Integer getNo() {
         return no;
     }

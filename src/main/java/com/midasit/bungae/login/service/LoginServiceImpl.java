@@ -3,6 +3,7 @@ package com.midasit.bungae.login.service;
 import com.midasit.bungae.exception.AlreadyJoinUserException;
 import com.midasit.bungae.exception.EmptyValueOfUserJoinException;
 import com.midasit.bungae.exception.HasNoUserException;
+import com.midasit.bungae.generator.model.UserAuthority;
 import com.midasit.bungae.user.dto.User;
 import com.midasit.bungae.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,8 @@ public class LoginServiceImpl implements LoginService {
         checkPassword(user.getPassword(), user.getPassword2());
 
         if ( !userRepository.hasId(user.getId()) ) {
-            int userNo = userRepository.create(user);
-            user.setNo(userNo);
-            userRepository.createAuthority(user);
+            user.setNo(userRepository.create(user));
+            userRepository.createAuthority(new UserAuthority(0, user.getId(), user.getPassword(), 1, user.getAuthority(), user.getNo()));
         } else {
             throw new AlreadyJoinUserException("이미 가입된 유저입니다.");
         }

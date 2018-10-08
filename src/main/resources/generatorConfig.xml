@@ -30,7 +30,7 @@
         </sqlMapGenerator>
 
         <!-- Mapper Interface : SQL XML에 기반하여 생성 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.midasit.bungae.generator.repository"  targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.midasit.bungae.generator.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
 
@@ -41,6 +41,7 @@
             <generatedKey column="no" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" type="post" />
         </table>-->
 
+        <!-- UserAuthority -->
         <table schema="toy" tableName="user_authority" domainObjectName="UserAuthority">
             <property name="useActualColumnNames" value="false" />
             <property name="ignoreQualifiersAtRuntime" value="true" />

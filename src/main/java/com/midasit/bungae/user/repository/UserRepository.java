@@ -1,5 +1,6 @@
 package com.midasit.bungae.user.repository;
 
+import com.midasit.bungae.generator.model.UserAuthority;
 import com.midasit.bungae.user.dto.User;
 
 public interface UserRepository {
@@ -10,5 +11,5 @@ public interface UserRepository {
     int hasUser(String id, String password);
     boolean hasId(String id);
     int create(User user);
-    int createAuthority(User user);
+    int createAuthority(UserAuthority userAuthority);
 }

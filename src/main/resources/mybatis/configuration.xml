@@ -4,6 +4,5 @@
     <!-- Aliase 등록 -->
     <typeAliases></typeAliases>
 
-    <!-- mapper.xml 등록 -->
     <mappers></mappers>
 </configuration>

@@ -1,4 +1,4 @@
-package com.midasit.bungae.generator.repository;
+package com.midasit.bungae.generator.mapper;
 
 
 import com.midasit.bungae.generator.model.UserExample;
@@ -29,4 +29,8 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    int selectExist(User record);
+
+    int selectExistId(String id);
 }

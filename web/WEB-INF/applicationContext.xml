@@ -54,7 +54,7 @@
 
     <!-- Mapper -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.midasit.bungae.generator.repository" />
+        <property name="basePackage" value="com.midasit.bungae.generator.mapper" />
     </bean>
 
 </beans>

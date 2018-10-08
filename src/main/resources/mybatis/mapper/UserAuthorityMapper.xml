@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.midasit.bungae.generator.mapper.UserMapper">
-  <resultMap id="BaseResultMap" type="com.midasit.bungae.user.dto.User">
+<mapper namespace="com.midasit.bungae.generator.mapper.UserAuthorityMapper">
+  <resultMap id="BaseResultMap" type="com.midasit.bungae.generator.model.UserAuthority">
     <id column="no" jdbcType="INTEGER" property="no" />
-    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="gender" jdbcType="BIT" property="gender" typeHandler="com.midasit.bungae.user.GenderTypeHandler"/>
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="authority" jdbcType="VARCHAR" property="authority" />
+    <result column="user_no" jdbcType="INTEGER" property="userNo" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,15 +68,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    no, id, password, name, email, gender
+    no, user_name, password, enabled, authority, user_no
   </sql>
-  <select id="selectByExample" parameterType="com.midasit.bungae.generator.model.UserExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.midasit.bungae.generator.model.UserAuthorityExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from user
+    from user_authority
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -87,94 +87,94 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from user
+    from user_authority
     where no = #{no,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from user
+    delete from user_authority
     where no = #{no,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.midasit.bungae.generator.model.UserExample">
-    delete from user
+  <delete id="deleteByExample" parameterType="com.midasit.bungae.generator.model.UserAuthorityExample">
+    delete from user_authority
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.midasit.bungae.user.dto.User">
+  <insert id="insert" parameterType="com.midasit.bungae.generator.model.UserAuthority">
     <selectKey keyProperty="no" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into user (id, password, name, 
-      email, gender)
-    values (#{id,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{gender,jdbcType=BIT,typeHandler=com.midasit.bungae.user.GenderTypeHandler})
+    insert into user_authority (user_name, password, enabled, 
+      authority, user_no)
+    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, 
+      #{authority,jdbcType=VARCHAR}, #{userNo,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.midasit.bungae.generator.model.User">
+  <insert id="insertSelective" parameterType="com.midasit.bungae.generator.model.UserAuthority">
     <selectKey keyProperty="no" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into user
+    insert into user_authority
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
+      <if test="userName != null">
+        user_name,
       </if>
       <if test="password != null">
         password,
       </if>
-      <if test="name != null">
-        name,
+      <if test="enabled != null">
+        enabled,
       </if>
-      <if test="email != null">
-        email,
+      <if test="authority != null">
+        authority,
       </if>
-      <if test="gender != null">
-        gender,
+      <if test="userNo != null">
+        user_no,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=VARCHAR},
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
+      <if test="enabled != null">
+        #{enabled,jdbcType=BIT},
       </if>
-      <if test="email != null">
-        #{email,jdbcType=VARCHAR},
+      <if test="authority != null">
+        #{authority,jdbcType=VARCHAR},
       </if>
-      <if test="gender != null">
-        #{gender,jdbcType=BIT},
+      <if test="userNo != null">
+        #{userNo,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.midasit.bungae.generator.model.UserExample" resultType="java.lang.Long">
-    select count(*) from user
+  <select id="countByExample" parameterType="com.midasit.bungae.generator.model.UserAuthorityExample" resultType="java.lang.Long">
+    select count(*) from user_authority
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update user
+    update user_authority
     <set>
       <if test="record.no != null">
         no = #{record.no,jdbcType=INTEGER},
       </if>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=VARCHAR},
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
       <if test="record.password != null">
         password = #{record.password,jdbcType=VARCHAR},
       </if>
-      <if test="record.name != null">
-        name = #{record.name,jdbcType=VARCHAR},
+      <if test="record.enabled != null">
+        enabled = #{record.enabled,jdbcType=BIT},
       </if>
-      <if test="record.email != null">
-        email = #{record.email,jdbcType=VARCHAR},
+      <if test="record.authority != null">
+        authority = #{record.authority,jdbcType=VARCHAR},
       </if>
-      <if test="record.gender != null">
-        gender = #{record.gender,jdbcType=BIT},
+      <if test="record.userNo != null">
+        user_no = #{record.userNo,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -182,45 +182,45 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update user
+    update user_authority
     set no = #{record.no,jdbcType=INTEGER},
-      id = #{record.id,jdbcType=VARCHAR},
+      user_name = #{record.userName,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
-      name = #{record.name,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR},
-      gender = #{record.gender,jdbcType=BIT}
+      enabled = #{record.enabled,jdbcType=BIT},
+      authority = #{record.authority,jdbcType=VARCHAR},
+      user_no = #{record.userNo,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.midasit.bungae.generator.model.User">
-    update user
+  <update id="updateByPrimaryKeySelective" parameterType="com.midasit.bungae.generator.model.UserAuthority">
+    update user_authority
     <set>
-      <if test="id != null">
-        id = #{id,jdbcType=VARCHAR},
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+      <if test="enabled != null">
+        enabled = #{enabled,jdbcType=BIT},
       </if>
-      <if test="email != null">
-        email = #{email,jdbcType=VARCHAR},
+      <if test="authority != null">
+        authority = #{authority,jdbcType=VARCHAR},
       </if>
-      <if test="gender != null">
-        gender = #{gender,jdbcType=BIT},
+      <if test="userNo != null">
+        user_no = #{userNo,jdbcType=INTEGER},
       </if>
     </set>
     where no = #{no,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.midasit.bungae.generator.model.User">
-    update user
-    set id = #{id,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="com.midasit.bungae.generator.model.UserAuthority">
+    update user_authority
+    set user_name = #{userName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=BIT}
+      enabled = #{enabled,jdbcType=BIT},
+      authority = #{authority,jdbcType=VARCHAR},
+      user_no = #{userNo,jdbcType=INTEGER}
     where no = #{no,jdbcType=INTEGER}
   </update>
 </mapper>

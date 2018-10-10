@@ -77,7 +77,7 @@
             '</tr>' +
             '<tr>' +
             '<td>게시글 비밀번호</td>' +
-            '<td><input type="text" name="password"/></td>' +
+            '<td><input type="password" name="password"/></td>' +
             '</tr>';
 
         $("#boardDetail").append(html);

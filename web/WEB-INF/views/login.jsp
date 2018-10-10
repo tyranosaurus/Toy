@@ -76,7 +76,7 @@
             </tr>
             <tr>
                 <td height="100">
-                    PW : <input type="text" name="password"/>
+                    PW : <input type="password" name="password"/>
                 </td>
             </tr>
         </tbody>

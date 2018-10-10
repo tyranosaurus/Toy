@@ -90,13 +90,13 @@
         <tr>
             <td height="50" width="80" align="center">PW : </td>
             <td height="50" align="center">
-                <input type="text" name="password" style="width:300px;"/>
+                <input type="password" name="password" style="width:300px;"/>
             </td>
         </tr>
         <tr>
             <td height="50" width="80" align="center">PW 확인 : </td>
             <td height="50" align="center">
-                <input type="text" name="password2" style="width:300px;"/>
+                <input type="password" name="password2" style="width:300px;"/>
             </td>
         </tr>
         <tr>

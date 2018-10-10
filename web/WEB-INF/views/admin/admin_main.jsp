@@ -35,7 +35,7 @@
     }
 
     function showNoticePasswordBox(obj, noticeNo){
-        var passwordBox = '<input type="text" name="password-' + noticeNo + '" value="">' +
+        var passwordBox = '<input type="password" name="password-' + noticeNo + '" value="">' +
                           '<button class="deleteButton" onclick="deleteNotice(' + noticeNo + ')">삭제 확인</button>';
 
         obj.parentNode.innerHTML = passwordBox;

@@ -35,7 +35,7 @@
     }
 
     function showPasswordBox(obj, boardNo) {
-        var passwordBox = '<input type="text" name="password-' + boardNo + '" value="">' +
+        var passwordBox = '<input type="password" name="password-' + boardNo + '" value="">' +
             '<button class="deleteButton" onclick="deleteBoard(' + boardNo + ')">삭제 확인</button>';
 
         obj.parentNode.innerHTML = passwordBox;

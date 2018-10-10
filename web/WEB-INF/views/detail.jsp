@@ -59,6 +59,11 @@
         var totalParticipants = '';
 
         for ( var i in boardDetail.participants ) {
+            if ( i == (boardDetail.participants.length - 1) ) {
+                totalParticipants += boardDetail.participants[i].id;
+                break;
+            }
+
             totalParticipants += boardDetail.participants[i].id + ", ";
         }
 

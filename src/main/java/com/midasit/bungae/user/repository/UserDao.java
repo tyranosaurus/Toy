@@ -52,7 +52,6 @@ public class UserDao implements UserRepository {
 
     @Override
     public int hasUser(String id, String password) {
-
         return userMapper.selectExist(new User(0, id, password, null, null, null));
     }
 

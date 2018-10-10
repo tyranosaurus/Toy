@@ -13,13 +13,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -47,7 +45,7 @@ public class BoardServiceTest {
 
     @After
     public void tearDown() throws Exception {
-        //boardService.deleteAll();
+        boardService.deleteAll();
     }
 
     @Test
@@ -125,7 +123,7 @@ public class BoardServiceTest {
     @Test
     public void 게시글을_수정한다() {
         // arrange (given)
-        int boardNo = boardService.createNew(new Board(0, "타이틀1", "패스워드1", "사진1", "내용1", 5, user1));
+        int boardNo = boardService.createNew(new Board(0, "타이틀1", "패스워드1", null, "내용1", 5, user1));
 
         // act (when)
         boardService.modify(boardNo, "수정 타이틀", null, "내용", 5, "패스워드1", user1.getNo());
@@ -138,7 +136,7 @@ public class BoardServiceTest {
         TestUtil.isEqualAllValueOfUser(modifiedBoard.getWriter(), user1);
     }
 
-    @Test(expected = EmptyResultDataAccessException.class)
+    @Test
     public void 게시글을_삭제한다() {
         // arrange (given)
         int boardNo = boardService.createNew(new Board(0, "타이틀1", "패스워드1", "사진1", "내용1", 5, user1));
@@ -271,7 +269,6 @@ public class BoardServiceTest {
      * */
     @Test(expected = ClassNotFoundException.class)
     @Transactional(rollbackFor = Exception.class)
-    @Rollback(false)
     public void 트랜잭션_롤백_테스트() throws ClassNotFoundException {
         // arrange (given)
         boardRepository.add(new Board(0, "롤백", "1234", null, "1234", 5, user1));

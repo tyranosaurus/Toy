@@ -1,4 +1,4 @@
-package com.midasit.bungae.admin.board.dto;
+package com.midasit.bungae.admin.dto;
 
 import com.midasit.bungae.user.dto.User;
 

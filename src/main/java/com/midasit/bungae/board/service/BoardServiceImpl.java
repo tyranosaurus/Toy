@@ -1,6 +1,6 @@
 package com.midasit.bungae.board.service;
 
-import com.midasit.bungae.admin.board.dto.Notice;
+import com.midasit.bungae.admin.dto.Notice;
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.board.repository.BoardRepository;
 import com.midasit.bungae.boarddetail.repository.BoardDetailRepository;
@@ -120,14 +120,13 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void modify(int boardNo, String title, String image, String content, int maxParticipantCount, String password, int userNo) {
         if ( userRepository.getAuthority(userNo).equals("ROLE_ADMIN") ) {
-            boardRepository.update(boardNo, title, null, content, maxParticipantCount);
-
+            boardRepository.update(new Board(boardNo, title, null, null, content, maxParticipantCount, null));
             return;
         }
 
         if ( isEqualWriter(boardNo, userNo) ) {
             if ( isEqualPassword(boardNo, password) ) {
-                boardRepository.update(boardNo, title, null, content, maxParticipantCount, password);
+                boardRepository.update(new Board(boardNo, title, password, null, content, maxParticipantCount, null));
             } else {
                 throw new NotEqualPasswordException("게시판의 비밀번호가 일치하지 않습니다.");
             }
@@ -140,7 +139,7 @@ public class BoardServiceImpl implements BoardService {
     public void modifyNotice(int noticeNo, String title, String image, String content, String password, int writerNo) {
         if ( isEqualWriterAtNotice(noticeNo, writerNo) ) {
             if ( isEqualPasswordAtNotice(noticeNo, password) ) {
-                noticeRepository.update(noticeNo, title, null, content, password);
+                noticeRepository.update(new Notice(noticeNo, title, password, null, content, null));
             } else {
                 throw new NotEqualPasswordException("공지사항의 비밀번호가 일치하지 않습니다.");
             }

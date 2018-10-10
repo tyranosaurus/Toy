@@ -1,4 +1,4 @@
-package com.midasit.bungae.admin.board.controller;
+package com.midasit.bungae.admin.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

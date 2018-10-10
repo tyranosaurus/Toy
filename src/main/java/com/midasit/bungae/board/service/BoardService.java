@@ -1,6 +1,6 @@
 package com.midasit.bungae.board.service;
 
-import com.midasit.bungae.admin.board.dto.Notice;
+import com.midasit.bungae.admin.dto.Notice;
 import com.midasit.bungae.board.dto.Board;
 import com.midasit.bungae.user.dto.User;
 

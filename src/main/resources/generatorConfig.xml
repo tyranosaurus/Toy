@@ -35,14 +35,35 @@
         </javaClientGenerator>
 
         <!-- User -->
-        <!--<table schema="toy" tableName="user" domainObjectName="User">
+        <table schema="toy" tableName="user" domainObjectName="User">
             <property name="useActualColumnNames" value="false" />
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="no" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" type="post" />
-        </table>-->
+        </table>
 
         <!-- UserAuthority -->
         <table schema="toy" tableName="user_authority" domainObjectName="UserAuthority">
+            <property name="useActualColumnNames" value="false" />
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="no" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" type="post" />
+        </table>
+
+        <!-- board -->
+        <table schema="toy" tableName="board" domainObjectName="Board">
+            <property name="useActualColumnNames" value="false" />
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="no" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" type="post" />
+        </table>
+
+        <!-- board_user -->
+        <table schema="toy" tableName="board_user" domainObjectName="BoardUser">
+            <property name="useActualColumnNames" value="false" />
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+            <generatedKey column="no" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" type="post" />
+        </table>
+
+        <!-- notice -->
+        <table schema="toy" tableName="notice" domainObjectName="Notice">
             <property name="useActualColumnNames" value="false" />
             <property name="ignoreQualifiersAtRuntime" value="true" />
             <generatedKey column="no" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" type="post" />

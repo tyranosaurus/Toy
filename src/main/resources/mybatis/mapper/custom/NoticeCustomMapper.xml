@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.midasit.bungae.generator.mapper.NoticeMapper">
+    <resultMap id="NoticeResultMap" type="com.midasit.bungae.admin.dto.Notice">
+        <id column="noticeNo" jdbcType="INTEGER" property="no" />
+        <result column="noticeTitle" jdbcType="VARCHAR" property="title" />
+        <result column="noticePassword" jdbcType="VARCHAR" property="password" />
+        <result column="noticeImage" jdbcType="VARCHAR" property="image" />
+        <result column="noticeContent" jdbcType="VARCHAR" property="content" />
+        <result column="user_no" jdbcType="INTEGER" property="userNo" />
+        <collection property="writer" resultMap="UserResultMap"/>
+    </resultMap>
+
+    <resultMap id="UserResultMap" type="com.midasit.bungae.user.dto.User">
+        <id column="userNo" jdbcType="INTEGER" property="no" />
+        <result column="userId" jdbcType="VARCHAR" property="id" />
+        <result column="userPassword" jdbcType="VARCHAR" property="password" />
+        <result column="userName" jdbcType="VARCHAR" property="name" />
+        <result column="userEmail" jdbcType="VARCHAR" property="email" />
+        <result column="userGender" jdbcType="BIT" property="gender" typeHandler="com.midasit.bungae.user.GenderTypeHandler"/>
+    </resultMap>
+
+    <select id="selectByNo" parameterType="java.lang.Integer" resultMap="NoticeResultMap">
+        select n.no as noticeNo,
+                n.title as noticeTitle,
+                n.password as noticePassword,
+                n.image as noticeImage,
+                n.content as noticeContent,
+                u.no as userNo,
+                u.id as userId,
+                u.password as userPassword,
+                u.name as userName,
+                u.email as userEmail,
+                u.gender as userGender
+        from notice as n,
+              user as u
+        where n.user_no = u.no
+               and n.no = #{no,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectAll" resultMap="NoticeResultMap">
+        select n.no as noticeNo,
+                n.title as noticeTitle,
+                n.password as noticePassword,
+                n.image as noticeImage,
+                n.content as noticeContent,
+                u.no as userNo,
+                u.id as userId,
+                u.password as userPassword,
+                u.name as userName,
+                u.email as userEmail,
+                u.gender as userGender
+        from notice as n,
+              user as u
+        where n.user_no = u.no
+    </select>
+</mapper>

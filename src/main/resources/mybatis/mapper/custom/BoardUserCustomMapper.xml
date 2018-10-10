@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.midasit.bungae.generator.mapper.BoardUserMapper">
+    <select id="selectExistParticipant" parameterType="com.midasit.bungae.generator.model.BoardUser" resultType="java.lang.Integer">
+        select EXISTS (select * from board_user where board_no = #{boardNo,jdbcType=INTEGER} and user_no = #{userNo,jdbcType=INTEGER})
+    </select>
+
+    <select id="selectAllParticipant" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select user_no from board_user where board_no = #{boardNo,jdbcType=INTEGER}
+    </select>
+</mapper>

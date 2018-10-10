@@ -1,5 +1,8 @@
 package com.midasit.bungae.boarduser.repository;
 
+import com.midasit.bungae.generator.mapper.BoardUserMapper;
+import com.midasit.bungae.generator.model.BoardUser;
+import com.midasit.bungae.generator.model.BoardUserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -16,107 +19,68 @@ import java.util.List;
 
 @Repository
 public class BoardUserDao implements BoardUserRepository {
-    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    BoardUserMapper boardUserMapper;
 
     public BoardUserDao() { }
 
-    @Autowired
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
     @Override
     public int add(final int boardNo, final int participantNo) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        BoardUser boardUser = new BoardUser(0, boardNo, participantNo);
+        boardUserMapper.insert(boardUser);
 
-        this.jdbcTemplate.update(new PreparedStatementCreator() {
-            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                String sql ="insert into board_user(no, board_no, user_no) " +
-                            "values(null, ?, ?)";
-
-                PreparedStatement ps = con.prepareStatement(sql,
-                        Statement.RETURN_GENERATED_KEYS);
-                ps.setInt(1, boardNo);
-                ps.setInt(2, participantNo);
-
-                return ps;
-            }
-        }, keyHolder);
-
-        return keyHolder.getKey().intValue();
+        return boardUser.getNo();
     }
 
     @Override
     public void deleteBoard(int boardNo) {
-        String sql = "delete " +
-                     "from board_user " +
-                     "where board_no = ?";
+        BoardUserExample example = new BoardUserExample();
+        example.createCriteria()
+                .andBoardNoEqualTo(boardNo);
 
-        this.jdbcTemplate.update(sql,
-                                 boardNo);
+        boardUserMapper.deleteByExample(example);
     }
 
     @Override
     public void deleteParticipant(int boardNo, int participantNo) {
-        String sql = "delete " +
-                     "from board_user " +
-                     "where board_no = ? " +
-                            "and user_no = ?";
+        BoardUserExample example = new BoardUserExample();
+        example.createCriteria()
+                .andBoardNoEqualTo(boardNo)
+                .andUserNoEqualTo(participantNo);
 
-        this.jdbcTemplate.update(sql,
-                                 boardNo,
-                                 participantNo);
+        boardUserMapper.deleteByExample(example);
     }
 
     @Override
     public void deleteAll() {
-        String sql = "delete " +
-                     "from board_user";
+        BoardUserExample example = new BoardUserExample();
+        example.createCriteria().andNoGreaterThan(0);
 
-        this.jdbcTemplate.update(sql);
+        boardUserMapper.deleteByExample(example);
     }
 
     @Override
     public int getParticipantCount(int boardNo) {
-        String sql = "select count(*) " +
-                     "from board_user " +
-                     "where board_no = ?";
+        BoardUserExample example = new BoardUserExample();
+        example.createCriteria()
+                .andBoardNoEqualTo(boardNo);
 
-        return this.jdbcTemplate.queryForObject(sql,
-                                                new Object[] { boardNo },
-                                                Integer.class);
+        return boardUserMapper.countByExample(example);
+
     }
 
     @Override
     public void addParticipant(int boardNo, int participantNo) {
-        String sql = "insert into board_user(no, board_no, user_no) " +
-                     "values(null, ?, ?)";
-
-        this.jdbcTemplate.update(sql,
-                                 boardNo,
-                                 participantNo);
+        boardUserMapper.insert(new BoardUser(0, boardNo, participantNo));
     }
 
     @Override
     public List<Integer> getParticipantNoList(int boardNo) {
-        String sql = "select user_no " +
-                     "from board_user " +
-                     "where board_no = ?";
-
-        return this.jdbcTemplate.queryForList(sql,
-                                              new Object[] { boardNo },
-                                              Integer.class);
+        return boardUserMapper.selectAllParticipant(boardNo);
     }
 
     @Override
     public int hasParticipant(int boardNo, int participantNo) {
-        String sql = "select EXISTS (select * " +
-                                     "from board_user " +
-                                     "where board_no = ? " +
-                                            "and user_no = ?)";
-
-        return this.jdbcTemplate.queryForObject(sql,
-                                                new Object[] { boardNo, participantNo },
-                                                Integer.class);
+        return boardUserMapper.selectExistParticipant(new BoardUser(0, boardNo, participantNo));
     }
 }

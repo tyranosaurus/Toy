@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.midasit.bungae.generator.mapper.BoardMapper">
+    <resultMap id="BoardResultMap" type="com.midasit.bungae.board.dto.Board">
+        <id column="boardNo" jdbcType="INTEGER" property="no" />
+        <result column="boardTitle" jdbcType="VARCHAR" property="title" />
+        <result column="boardPassword" jdbcType="VARCHAR" property="password" />
+        <result column="boardImage" jdbcType="VARCHAR" property="image" />
+        <result column="boardContent" jdbcType="VARCHAR" property="content" />
+        <result column="boardMaxUserCount" jdbcType="INTEGER" property="maxParticipantCount" />
+        <collection property="writer" resultMap="UserResultMap"/>
+    </resultMap>
+
+    <resultMap id="UserResultMap" type="com.midasit.bungae.user.dto.User">
+        <id column="userNo" jdbcType="INTEGER" property="no" />
+        <result column="userId" jdbcType="VARCHAR" property="id" />
+        <result column="userPassword" jdbcType="VARCHAR" property="password" />
+        <result column="userName" jdbcType="VARCHAR" property="name" />
+        <result column="userEmail" jdbcType="VARCHAR" property="email" />
+        <result column="userGender" jdbcType="BIT" property="gender" typeHandler="com.midasit.bungae.user.GenderTypeHandler"/>
+    </resultMap>
+
+    <select id="selectByNo" parameterType="java.lang.Integer" resultMap="BoardResultMap">
+        select b.no as boardNo,
+                b.title as boardTitle,
+                b.password as boardPassword,
+                b.image as boardImage,
+                b.content as boardContent,
+                b.max_user_count as boardMaxUserCount,
+                u.no as userNo,
+                u.id as userId,
+                u.password as userPassword,
+                u.name as userName,
+                u.email as userEmail,
+                u.gender as userGender
+        from board as b,
+              user as u
+        where b.user_no = u.no
+                and b.no = #{no,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectAll" resultMap="BoardResultMap">
+        select b.no as boardNo,
+                b.title as boardTitle,
+                b.password as boardPassword,
+                b.image as boardImage,
+                b.content as boardContent,
+                b.max_user_count as boardMaxUserCount,
+                u.no as userNo,
+                u.id as userId,
+                u.password as userPassword,
+                u.name as userName,
+                u.email as userEmail,
+                u.gender as userGender
+        from board as b,
+              user as u
+        where b.user_no = u.no
+        order by b.no asc
+    </select>
+</mapper>

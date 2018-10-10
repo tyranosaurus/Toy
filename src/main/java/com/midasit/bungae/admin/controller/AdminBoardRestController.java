@@ -1,6 +1,6 @@
-package com.midasit.bungae.admin.board.controller;
+package com.midasit.bungae.admin.controller;
 
-import com.midasit.bungae.admin.board.dto.Notice;
+import com.midasit.bungae.admin.dto.Notice;
 import com.midasit.bungae.board.service.BoardService;
 import com.midasit.bungae.errorcode.ServerErrorCode;
 import com.midasit.bungae.exception.EmptyValueOfNoticeCreationException;
